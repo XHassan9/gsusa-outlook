@@ -585,7 +585,7 @@ async function drawMap(){
     svg.append("g").selectAll("path").data(Object.entries(metros)).join("path").attr("d",([n,c])=>path({type:"LineString",coordinates:[origin,c]})).attr("fill","none").attr("stroke",TEAL).attr("stroke-opacity",0.45).attr("stroke-width",1.2);
     svg.append("g").selectAll("circle").data(Object.entries(metros)).join("circle").attr("cx",([n,c])=>proj(c)[0]).attr("cy",([n,c])=>proj(c)[1]).attr("r",2.5).attr("fill",TEAL);
     // pins
-    const pins=[{n:"Digital Cookie fulfillment partner",s:"Southeast Michigan · ~2.0M parcels a season leave from here",c:origin,col:NAVY,lx:-12,ly:-12,anc:"end"},{n:"Girl Scouts of the USA, national HQ",s:"New York, NY",c:[-74.0,40.71],col:NAVY,lx:10,ly:20,anc:"start"},{n:"HTL headquarters",s:"Charlotte, NC · Cato Fashions ships live from here today",c:[-80.84,35.23],col:TEAL,lx:12,ly:4,anc:"start"}];
+    const pins=[{n:"Digital Cookie fulfillment partner",s:"Southeast Michigan · ~2.0M parcels a season leave from here",c:origin,col:NAVY,lx:-12,ly:-12,anc:"end"},{n:"Girl Scouts of the USA, national HQ",s:"New York, NY",c:[-74.0,40.71],col:NAVY,lx:-12,ly:22,anc:"end"},{n:"HTL headquarters",s:"Charlotte, NC · Cato Fashions ships live from here today",c:[-80.84,35.23],col:TEAL,lx:12,ly:4,anc:"start"}];
     const pg=svg.append("g").selectAll("g").data(pins).join("g").attr("transform",d=>`translate(${proj(d.c)})`);
     pg.append("circle").attr("r",9).attr("fill",d=>d.col).attr("fill-opacity",0.25);pg.append("circle").attr("r",5).attr("fill",d=>d.col).attr("stroke","#fff").attr("stroke-width",2);
     hover(pg,d=>`<b>${d.n}</b><br>${d.s}`);
