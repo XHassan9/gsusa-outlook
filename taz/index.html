@@ -1826,6 +1826,8 @@ document.querySelectorAll('#p-exec>.card:first-child,#p-tools>.card:first-child,
 
 
 lkp();
+
+(function(){const m=location.hash.match(/order=([^&]+)/);if(!m)return;const id=decodeURIComponent(m[1]);const r=SH.find(x=>x.id==id||x.ord==id);if(!r)return;$('#login').style.display='none';setRole('ops');go('ship');openM(r)})();
 </script>
 </body>
 </html>
