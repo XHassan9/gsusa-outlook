@@ -253,6 +253,9 @@ svg text:not([fill]){fill:#E8ECEA}
 a.olink{color:#5EE39B;font-weight:700;text-decoration:none;border-bottom:1px dashed #2E6B4A}
 a.olink:hover{color:#fff}
 @media print{#mani,#mani *{visibility:visible}#mani{position:absolute;inset:0;padding:0;overflow:visible}#mbox{box-shadow:none}.mhd button{display:none}}
+#tip{position:fixed;z-index:80;display:none;max-width:340px;background:#07080A;border:1px solid #2E6B4A;border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.45;color:#E8ECEA;box-shadow:0 14px 40px rgba(0,0,0,.55);pointer-events:none}
+.wmk{position:absolute;right:-30px;bottom:-40px;height:210px;opacity:.13;pointer-events:none;filter:brightness(1.4)}
+.card>.row,.card>h3,.card>p,.card>div{position:relative}
 </style>
 </head>
 <body>
@@ -1408,7 +1411,7 @@ const PGN=k=>(PAGES.find(p=>p[0]==k)||[k,k])[1];
 function srcLinks(a){return a.map(k=>`<a href="${SRC[k][1]}" target="_blank" rel="noopener" style="font-size:12px">${SRC[k][0]} ↗</a>`).join(' · ')}
 function drawRisks(f){
  $('#risks').innerHTML=RISKS.map((r,i)=>({r,i})).filter(o=>!f||o.r.grp==f).map(({r,i})=>`<div class="card" style="display:flex;flex-direction:column;gap:8px">
-  <div class="row"><span style="width:28px;height:28px;border-radius:50%;background:${r.i>=5?'#EE3124':r.i>=4?'#AF0061':'#F5B800'};color:#fff;display:grid;place-items:center;font-weight:900;flex:none">${i+1}</span><h3 style="margin:0;flex:1">${r.t}</h3><span class="tag gray">${r.grp} · ${r.yr}</span></div>
+  <div class="row"><span data-ri="${i}" style="cursor:help;width:28px;height:28px;border-radius:50%;background:${r.i>=5?'#EE3124':r.i>=4?'#AF0061':'#F5B800'};color:#fff;display:grid;place-items:center;font-weight:900;flex:none">${i+1}</span><h3 style="margin:0;flex:1">${r.t}</h3><span class="tag gray">${r.grp} · ${r.yr}</span></div>
   <div style="font-size:13px;color:var(--ink2)"><b style="color:var(--mut);font-size:11px;letter-spacing:.6px">WHAT HAPPENED</b><br>${r.w}</div>
   <div style="font-size:13px;border-left:3px solid var(--g);padding-left:10px"><b style="color:var(--g);font-size:11px;letter-spacing:.6px">HOW GSUSA BY TAZ HANDLES IT</b><br>${r.fix}</div>
   <div class="row" style="margin-top:auto"><span style="flex:1">${srcLinks(r.src)}</span><span class="tag ${r.st=='Built in beta'?'g':'b'}">${r.st}</span><button class="btn ghost" style="padding:6px 10px" onclick="go('${r.pg}')">${PGN(r.pg)} →</button></div></div>`).join('');
@@ -1418,6 +1421,8 @@ $('#riskf').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#risk
 SRC.dc15=['Alaska Public Media · Dec 2014','https://alaskapublic.org/2014/12/16/girl-scouts-of-america-and-the-digital-cookie-program'];
 const FQ=['Rare','Occasional','Several seasons','Most seasons','Every season'];
 const IM=['Minor','Noticeable','Moderate','Major','Severe'];
+const FQD=['<b>Rare · 1</b><br>Once in the public record, or a one-off year','<b>Occasional · 2</b><br>A few times across recent seasons','<b>Several seasons · 3</b><br>Two or three seasons, or every season for some councils','<b>Most seasons · 4</b><br>Comes up in most seasons','<b>Every season · 5</b><br>Built into how the program runs today'];
+const IMD=['<b>Minor · 1</b><br>An annoyance. Small cost or a few contacts','<b>Noticeable · 2</b><br>Customers notice. Care contacts and refunds','<b>Moderate · 3</b><br>Troops and councils lose time or sales','<b>Major · 4</b><br>Hits sales or rewards across many councils','<b>Severe · 5</b><br>National press, lost revenue, harm to trust in the brand'];
 const RX=[
  {s:'Online exclusive sells out',sys:['Digital Cookie','Bakers'],who:'Customers, girls and troops, GSUSA brand',why:'Happened in its first season. Paid orders were cancelled and resale prices hit the news.',sig:'Sell rate per hour vs packages left',kpi:'Paid-then-cancelled orders = 0',own:'GSUSA eCommerce + TAZ',rf:4,ri:2,yrs:[2023]},
  {s:'Baker production shortfall',sys:['Bakers','Digital Cookie'],who:'Troops, councils, customers',why:'Hit two seasons in a row and drew national coverage. Troops couldn\'t fill reorders.',sig:'Staged stock under 60% of launch target',kpi:'Weeks of cover by variety',own:'GSUSA Product Program + bakers',rf:3,ri:3,yrs:[2022,2023]},
@@ -1442,8 +1447,8 @@ function drawRM(){
  const W=1240,H=520,L=96,B=58,T=12,Rt=8,cw=(W-L-Rt)/5,ch=(H-B-T)/5;
  let s=`<svg viewBox="0 0 ${W} ${H}">`;
  for(let x=0;x<5;x++)for(let y=0;y<5;y++){const sc=(x+1)*(y+1);const c=sc>=16?'rgba(238,49,36,.20)':sc>=9?'rgba(245,184,0,.13)':'rgba(0,180,81,.08)';s+=`<rect x="${L+x*cw+1.5}" y="${T+(4-y)*ch+1.5}" width="${cw-3}" height="${ch-3}" rx="7" fill="${c}"/>`}
- FQ.forEach((t,i)=>s+=`<text x="${L+(i+.5)*cw}" y="${H-B+18}" font-size="11.5" text-anchor="middle" fill="#AEB7B2">${t}</text>`);
- IM.forEach((t,i)=>s+=`<text x="${L-10}" y="${T+(4-i+.5)*ch+4}" font-size="11.5" text-anchor="end" fill="#AEB7B2">${t}</text>`);
+ FQ.forEach((t,i)=>s+=`<text data-tip="${FQD[i]}" style="cursor:help" x="${L+(i+.5)*cw}" y="${H-B+18}" font-size="11.5" text-anchor="middle" fill="#AEB7B2">${t}</text>`);
+ IM.forEach((t,i)=>s+=`<text data-tip="${IMD[i]}" style="cursor:help" x="${L-10}" y="${T+(4-i+.5)*ch+4}" font-size="11.5" text-anchor="end" fill="#AEB7B2">${t}</text>`);
  s+=`<text x="${L+(W-L-Rt)/2}" y="${H-10}" font-size="12.5" font-weight="700" text-anchor="middle" fill="#93A1A8">HOW OFTEN IT HAS COME UP →</text>`;
  s+=`<text transform="translate(14 ${T+(H-B-T)/2}) rotate(-90)" font-size="12.5" font-weight="700" text-anchor="middle" fill="#93A1A8">MEMBER IMPACT →</text>`;
  const pos=(f,im)=>[f,im];const cells={};const P={};
@@ -1452,7 +1457,7 @@ function drawRM(){
   XY[i]=[L+(f-1)*cw+10+col*(cw/cols),T+(5-im)*ch+ch/2-(rows-1)*13+row*26,cols]})});
  if(RMODE=='taz')RISKS.forEach((r,i)=>{const ax=L+(r.f-.5)*cw,ay=T+(5-r.i+.5)*ch,[bx,by]=XY[i];if(r.f==r.rf&&r.i==r.ri)return;s+=`<circle cx="${ax}" cy="${ay}" r="4" fill="none" stroke="${gc(r)}" stroke-opacity=".5"/><path d="M${ax},${ay} L${bx+10},${by}" stroke="${gc(r)}" stroke-opacity=".35" stroke-width="1.4" stroke-dasharray="3 3"/>`});
  RISKS.forEach((r,i)=>{const [x,y,cols]=XY[i];const dim=RSYS&&!r.sys.includes(RSYS);const sel=i==RSEL;const mxc=Math.floor(((cols>1?cw/2:cw)-34)/6.6);const lab=r.s.length>mxc?r.s.slice(0,mxc-1)+'…':r.s;
-  s+=`<g class="rdot" data-i="${i}" style="cursor:pointer;opacity:${dim?.18:1}"><rect x="${x-4}" y="${y-11}" width="${cols>1?cw/2-8:cw-16}" height="22" rx="11" fill="${sel?'rgba(255,255,255,.12)':'transparent'}" stroke="${sel?'#fff':'none'}" stroke-opacity=".5"/><circle cx="${x+8}" cy="${y}" r="9.5" fill="${gc(r)}" stroke="#0B0D0F" stroke-width="1.5"/><text x="${x+8}" y="${y+3.8}" font-size="10.5" font-weight="900" text-anchor="middle" fill="#0B0D0F">${i+1}</text><text x="${x+22}" y="${y+4}" font-size="12.5" font-weight="${sel?800:600}" fill="#E8ECEA">${lab}</text><title>${i+1}. ${r.t}</title></g>`});
+  s+=`<g class="rdot" data-i="${i}" data-ri="${i}" style="cursor:pointer;opacity:${dim?.18:1}"><rect x="${x-4}" y="${y-11}" width="${cols>1?cw/2-8:cw-16}" height="22" rx="11" fill="${sel?'rgba(255,255,255,.12)':'transparent'}" stroke="${sel?'#fff':'none'}" stroke-opacity=".5"/><circle cx="${x+8}" cy="${y}" r="9.5" fill="${gc(r)}" stroke="#0B0D0F" stroke-width="1.5"/><text x="${x+8}" y="${y+3.8}" font-size="10.5" font-weight="900" text-anchor="middle" fill="#0B0D0F">${i+1}</text><text x="${x+22}" y="${y+4}" font-size="12.5" font-weight="${sel?800:600}" fill="#E8ECEA">${lab}</text></g>`});
  $('#riskmx').innerHTML=s+'</svg><div class="legend" style="margin-top:6px"><span><i style="background:#F5B800"></i>Cookies</span><span><i style="background:#00B451"></i>Shop</span><span><i style="background:#AF0061"></i>2027 launch</span>'+(RMODE=='taz'?'<span>○ ┄ where it sits today</span>':'')+'</div>';
  $('#riskmx').querySelectorAll('.rdot').forEach(g=>g.onclick=()=>{RSEL=+g.dataset.i;drawRM();drawRD()});
 }
@@ -1477,7 +1482,7 @@ function drawRD(){
 }
 function drawReg(){
  const rows=RISKS.map((r,i)=>({r,i})).filter(o=>!RSYS||o.r.sys.includes(RSYS)).sort((a,b)=>b.r.f*b.r.i-a.r.f*a.r.i||a.i-b.i);
- $('#rreg').innerHTML=rows.map(({r,i})=>{const n=r.f*r.i,t=r.rf*r.ri;return `<tr data-i="${i}"><td><span style="display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:${gc(r)};color:#0B0D0F;font-weight:900;font-size:11px">${i+1}</span></td><td style="white-space:normal;min-width:200px"><b>${r.s}</b></td><td style="white-space:normal;font-size:12px;color:var(--ink2)">${r.sys.join(', ')}</td><td class="right"><b style="color:${scoreC(n)}">${n}</b></td><td class="right"><b style="color:${scoreC(t)}">${t}</b> <span style="font-size:11px;color:#3DDC84">−${Math.round((1-t/n)*100)}%</span></td><td style="white-space:normal;font-size:12.5px">${r.sig}</td><td style="white-space:normal;font-size:12.5px">${r.own}</td><td><span class="tag ${r.st=='Built in beta'?'g':'b'}">${r.st}</span></td></tr>`}).join('');
+ $('#rreg').innerHTML=rows.map(({r,i})=>{const n=r.f*r.i,t=r.rf*r.ri;return `<tr data-i="${i}"><td><span data-ri="${i}" style="cursor:help;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:${gc(r)};color:#0B0D0F;font-weight:900;font-size:11px">${i+1}</span></td><td style="white-space:normal;min-width:200px"><b>${r.s}</b></td><td style="white-space:normal;font-size:12px;color:var(--ink2)">${r.sys.join(', ')}</td><td class="right"><b style="color:${scoreC(n)}">${n}</b></td><td class="right"><b style="color:${scoreC(t)}">${t}</b> <span style="font-size:11px;color:#3DDC84">−${Math.round((1-t/n)*100)}%</span></td><td style="white-space:normal;font-size:12.5px">${r.sig}</td><td style="white-space:normal;font-size:12.5px">${r.own}</td><td><span class="tag ${r.st=='Built in beta'?'g':'b'}">${r.st}</span></td></tr>`}).join('');
  $('#rreg').querySelectorAll('tr').forEach(tr=>tr.onclick=()=>{RSEL=+tr.dataset.i;drawRM();drawRD();$('#riskmx').scrollIntoView({behavior:'smooth',block:'center'})});
 }
 function drawKP(){
@@ -1490,7 +1495,7 @@ function drawTL(){
  let s=`<svg viewBox="0 -26 ${W} ${H+26}"><line x1="${L-30}" x2="${W-R+30}" y1="110" y2="110" stroke="#2A3236" stroke-width="3"/>`;
  
  EV.forEach(([y,t,d,src,ids],k)=>{const up=k%2==0,X=xi(k),Y=up?30:178;s+=`<text x="${X}" y="${up?134:96}" font-size="11.5" font-weight="700" text-anchor="middle" fill="#93A1A8">${Math.floor(y)}</text>`;const c=ids.includes(14)?'#AF0061':ids.includes(13)?'#00B451':'#F5B800';
-  s+=`<line x1="${X}" x2="${X}" y1="110" y2="${up?Y+22:Y-14}" stroke="${c}" stroke-opacity=".6"/><circle cx="${X}" cy="110" r="7" fill="${c}" stroke="#0B0D0F" stroke-width="2"/>`;
+  s+=`<line x1="${X}" x2="${X}" y1="110" y2="${up?Y+22:Y-14}" stroke="${c}" stroke-opacity=".6"/><circle cx="${X}" cy="110" r="9" fill="${c}" stroke="#0B0D0F" stroke-width="2" data-ri="${ids[0]-1}" style="cursor:help"/>`;
   s+=`<a href="${SRC[src][1]}" target="_blank"><text x="${X}" y="${Y}" font-size="12" font-weight="800" text-anchor="middle" fill="#E8ECEA">${t}</text><text x="${X}" y="${Y+15}" font-size="10.5" text-anchor="middle" fill="#93A1A8">${d} · #${ids.join(', #')}</text></a>`});
  $('#rtime').innerHTML=s+'</svg>';
 }
@@ -1750,6 +1755,26 @@ $('#mani').onclick=e=>{if(e.target.id=='mani')closeM()};
  $('#hd_vol').innerHTML=v+'</svg>';$('#hd_vol').onclick=e=>{if(e.target.closest('.hdv'))go('ship')};
  $('#hd_ord').innerHTML=S.slice(0,7).map(r=>`<a href="#" class="olink" data-s="${SH.indexOf(r)}" style="display:grid;grid-template-columns:1fr auto;gap:2px 10px;text-decoration:none;color:var(--ink);padding:8px 0;border-bottom:1px solid #1E2327"><b style="font-size:13px">${r.ord}</b><span class="st ${SC[r.status]}" style="font-size:12px">${r.status}</span><span style="font-size:12px;color:var(--mut)">${r.prog} · ${r.car} · to ${r.city?r.city+', ':''}${r.st}</span><span style="font-size:12px;color:var(--g)">Manifest →</span></a>`).join('');
 })();
+
+
+// ---------- hover tips ----------
+(function(){
+ const tip=document.createElement('div');tip.id='tip';document.body.appendChild(tip);
+ const riskTip=i=>{const r=RISKS[i];if(!r)return'';const n=r.f*r.i,t=r.rf*r.ri;return `<div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span style="width:22px;height:22px;border-radius:50%;background:${gc(r)};color:#0B0D0F;display:grid;place-items:center;font-weight:900;font-size:11px;flex:none">${+i+1}</span><b>${r.t}</b></div><div style="color:#C9D3CD">${r.w}</div><div style="margin-top:8px;display:flex;gap:14px;font-size:12px"><span>Today <b style="color:${scoreC(n)}">${n}</b></span><span>With TAZ <b style="color:${scoreC(t)}">${t}</b></span><span style="color:#93A1A8">${FQ[r.f-1]} · ${IM[r.i-1]}</span></div><div style="margin-top:6px;font-size:12px;color:#5EE39B">Fix: ${r.fix.split('. ')[0]}.</div><div style="margin-top:4px;font-size:11px;color:#7A8780">Click for full detail</div>`};
+ function content(el){if(el.dataset.ri!=null)return riskTip(+el.dataset.ri);return el.dataset.tip}
+ function place(e){const w=tip.offsetWidth,h=tip.offsetHeight;let x=e.clientX+16,y=e.clientY+16;if(x+w>innerWidth-8)x=e.clientX-w-16;if(y+h>innerHeight-8)y=e.clientY-h-16;tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,y)+'px'}
+ let cur=null;
+ document.addEventListener('mouseover',e=>{const el=e.target.closest('[data-ri],[data-tip]');if(!el){tip.style.display='none';cur=null;return}if(el!==cur){cur=el;const c=content(el);if(!c){tip.style.display='none';return}tip.innerHTML=c;tip.style.display='block'}place(e)});
+ document.addEventListener('mousemove',e=>{if(tip.style.display=='block')place(e)});
+ document.addEventListener('scroll',()=>{tip.style.display='none';cur=null},true);
+ document.addEventListener('click',e=>{const el=e.target.closest('[data-ri]');if(el&&!el.closest('.rdot')&&!el.closest('#rreg tr')){RSEL=+el.dataset.ri;if(document.querySelector('#p-radar.on')){drawRM();drawRD();$('#riskmx').scrollIntoView({behavior:'smooth',block:'center'})}}});
+ // KPI tile explanations
+ const KT={'Lessons tracked':'13 problems from the public record (news, council notices, GSUSA FAQs), plus the 2027 launch itself.','High-risk today (score 12+)':'Risks scoring 12 or more on how often × impact (max 25). HTL\'s assessment from public sources.','Average risk score':'Average of how often × impact across all 14 lessons. The second number assumes each fix is live.','Fixes in this beta':'Fixes you can click through in this beta today. State-fee checks arrive with billing in Phase 2.','Parcels per year · all programs':'Modeled from public sources: Shop orders, cookie direct-ship orders and Patch Pals. Replaced by your data once connected.','Parcel spend today · all programs':'What GSUSA and members pay carriers today, estimated from public fee tables and volumes.','Girl Scout Shop':'Estimated from the FY2023 Form 990 and public shipping info.','Cookie online orders':'Shipped cookie orders per season at the published flat-rate fee.','Products':'Patch Pals (made with BARK) and Sparkables (made with Partake).','Channel':'Both are online exclusives: direct ship only, no booths.','Launch-week orders':'Mid-case estimate for launch week. Use the surge planner to test other cases.','Ship-from sites':'The co-packer ship sites still need to be confirmed with GSUSA.','Open exceptions':'Every parcel needing action across all programs (sample).','Past expected date':'Parcels past their delivery promise. The customer gets a notice before they ask.','Stuck between systems':'Orders missing a label or first scan past their limit. This is the sync monitor at work.','Damage & address':'Damage claims and address fixes in progress.'};
+ function tagK(){document.querySelectorAll('.kpi .lab').forEach(l=>{const k=l.childNodes[0]&&l.childNodes[0].textContent.trim();const t=KT[k];if(t&&!l.closest('.kpi').dataset.tip){l.closest('.kpi').dataset.tip=`<b>${k}</b><br>${t}`;l.closest('.kpi').style.cursor='help'}})}
+ tagK();const og=go;window.go=function(k){og(k);tagK()};
+})();
+// ---------- trefoil watermark on hero cards ----------
+document.querySelectorAll('#p-exec>.card:first-child,#p-tools>.card:first-child,#p-radar>.card:first-child,#p-launch>.card:first-child').forEach(c=>{c.style.position='relative';c.style.overflow='hidden';const im=document.createElement('img');im.src=TREF;im.alt='';im.className='wmk';c.appendChild(im)});
 
 </script>
 </body>
