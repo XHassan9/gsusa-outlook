@@ -185,9 +185,8 @@ textarea.oin{resize:vertical}
  .mmenu{display:none!important}
  .fab{display:none!important}
  .dtonly{display:none}.mbonly{display:block}
- .bl{display:none}.bs{display:inline}
  .banner{padding:8px 12px;margin:10px 0}
- .top{padding:14px 0 10px}.who{display:none}
+ .top{padding:14px 0 10px}.who{display:flex;flex-wrap:wrap;gap:6px}.who .hide-m{display:inline-flex!important}
  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:#08130cf2;backdrop-filter:blur(10px);border-top:1px solid var(--line2);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
  .tabbar button{all:unset;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--mute);font-size:11px;font-weight:600;cursor:pointer;padding:4px 0}
  .tabbar button.on{color:var(--lime);background:none!important;box-shadow:none!important}
@@ -207,6 +206,44 @@ textarea.oin{resize:vertical}
  .chat{bottom:0;z-index:60}
  .drawer{z-index:55}
  .drawer .x{position:sticky;top:0;float:right;width:40px;height:40px;font-size:26px}
+}
+
+.dmbadge{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#f2715b;color:#fff;font-size:11px;font-weight:800;margin-left:6px}
+.dmbadge:empty{display:none}
+.dmwrap{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 230px);min-height:520px;overflow:hidden}
+.dmlist{border-right:1px solid var(--line);overflow:auto}
+.dmt{display:flex;gap:10px;padding:13px 14px;border-bottom:1px solid var(--line);cursor:pointer;align-items:flex-start}
+.dmt:hover,.dmt.on{background:#ffffff08}
+.dmav{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;color:#07110b}
+.dmt b{font-size:14px;display:block}.dmt small{display:block;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+.dmt .tm{margin-left:auto;font-size:11px;color:var(--dim);text-align:right}
+.dmconv{display:flex;flex-direction:column;min-width:0}
+.dmhead{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.dmhead .bk{all:unset;display:none;cursor:pointer;font-size:22px;padding:0 6px}
+.dmmsgs{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:8px}
+.dmm{max-width:78%;padding:9px 12px;border-radius:14px;font-size:14px;line-height:1.4}
+.dmm.in{background:#ffffff0f;border:1px solid var(--line2);align-self:flex-start;border-bottom-left-radius:4px}
+.dmm.out{background:#00b04f;color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.dmm .who2{font-size:11px;color:var(--mute);margin-bottom:2px;font-weight:700}
+.dmm .tt{font-size:10.5px;opacity:.7;margin-top:3px;text-align:right}
+.dmm .lk{display:inline-block;margin-top:5px;padding:3px 8px;border-radius:8px;background:#00000033;font-weight:700;font-size:12px;cursor:pointer;text-decoration:underline}
+.dmm.in .lk{background:#3ec7c222;color:var(--teal)}
+.dmday{align-self:center;font-size:11px;color:var(--dim);margin:6px 0}
+.dmtyping{align-self:flex-start;color:var(--mute);font-size:12.5px;font-style:italic}
+.dmquick{display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0}
+.dmquick button{all:unset;cursor:pointer;white-space:nowrap;font-size:12.5px;padding:6px 10px;border:1px solid var(--line2);border-radius:99px;color:var(--text)}
+.dmform{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);margin-top:8px}
+.dmform input{flex:1;min-width:0;background:#09120d;border:1px solid var(--line2);color:var(--text);border-radius:12px;padding:10px 12px;font:inherit}
+.dmattach{all:unset;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--teal);padding:0 6px;white-space:nowrap}
+@media (max-width:820px){
+ .dmwrap{grid-template-columns:1fr;height:calc(100dvh - 250px);min-height:430px}
+ .dmlist{border-right:0}
+ .dmconv{display:none}
+ .dmwrap.open .dmconv{display:flex;position:fixed;left:0;right:0;top:62px;bottom:calc(70px + env(safe-area-inset-bottom));z-index:48;background:#0b1811}
+ .dmhead .bk{display:block}
+ .dmm{max-width:86%}
+ .tabbar button{position:relative}
+ .tabbar .dmbadge{position:absolute;top:0;left:50%;margin:0 0 0 6px}
 }
 </style>
 </head>
@@ -283,6 +320,7 @@ textarea.oin{resize:vertical}
     <div class="navh">Systems</div>
     <button data-p="netsuite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h8M8 17h8"/><rect x="2" y="3" width="6" height="8" rx="1.5"/><rect x="16" y="13" width="6" height="8" rx="1.5"/><path d="M16 7l3 3-3 3M8 13l-3 3 3 3"/></svg>NetSuite</button>
     <div class="navh">Control</div>
+    <button data-p="dispatch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8 11h8M8 14h5"/></svg>Dispatch <span class="dmbadge" id="dmnav"></span></button>
     <button data-p="overflow" style="color:#f2b84b"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6M12 22v-6M4.9 4.9l4.2 4.2M19.1 19.1l-4.2-4.2M2 12h6M22 12h-6"/></svg>Overflow help</button>
     <button data-p="exceptions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l10 18H2z"/><path d="M12 10v4M12 18h0"/></svg>Exceptions &amp; docs</button>
     <button data-p="roadmap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v16M4 5h12l-2 4 2 4H4"/></svg>Roadmap</button>
@@ -564,6 +602,20 @@ textarea.oin{resize:vertical}
     </div>
   </section>
 
+  <!-- DISPATCH -->
+  <section class="page" id="dispatch">
+    <div class="dmwrap card" style="padding:0">
+      <div class="dmlist" id="dmlist"></div>
+      <div class="dmconv">
+        <div class="dmhead" id="dmhead"></div>
+        <div class="dmmsgs" id="dmmsgs"></div>
+        <div class="dmquick" id="dmquick"></div>
+        <form class="dmform" onsubmit="dmSend(event)"><button type="button" class="dmattach" onclick="dmAttach()" title="Attach a load">＋ Load</button><input id="dmin" placeholder="Message the team…" autocomplete="off"><button class="btn" type="submit">Send</button></form>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:10px">Sample conversations. In the live version, each thread connects to the site's text line, Teams or email, and every message is saved against the load it mentions.</p>
+  </section>
+
   <!-- OVERFLOW -->
   <section class="page" id="overflow">
     <div class="card" style="background:linear-gradient(135deg,#3a2a06,#1a1405 60%,#0d1a12);border-color:#f2b84b55">
@@ -708,6 +760,7 @@ textarea.oin{resize:vertical}
  <button data-t="overview" onclick="go('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M3 11l9-7 9 7v9H5v-9"/></svg><span>Home</span></button>
  <button data-t="loads" onclick="go('loads')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><rect x="1" y="6" width="14" height="11" rx="1"/><path d="M15 10h4l3 3v4h-7"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg><span>Loads</span></button>
  <button class="tz" onclick="toggleChat(true)"><i><span class="dot"></span></i><span>Ask TAZ</span></button>
+ <button data-t="dispatch" onclick="go('dispatch')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg><span>Dispatch<span class="dmbadge" id="dmtab"></span></span></button>
  <button data-t="overflow" onclick="go('overflow')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 2v6M12 22v-6M4.9 4.9l4.2 4.2M19.1 19.1l-4.2-4.2M2 12h6M22 12h-6"/></svg><span>Overflow</span></button>
  <button data-t="more" onclick="document.body.classList.toggle('navopen')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>More</span></button>
 </nav>
@@ -842,12 +895,54 @@ function fresh(){return {loads:JSON.parse(JSON.stringify(SEED_LOADS)),open:JSON.
 function save(){try{localStorage.setItem('gsusa_taz_sc_v2',JSON.stringify(S))}catch(e){}}
 try{S=JSON.parse(localStorage.getItem('gsusa_taz_sc_v2'))}catch(e){S=null}
 if(!S||!S.loads)S=fresh();
-function resetSample(){S=fresh();save();renderAll();toast('Sample data reset')}
+function resetSample(){try{dmReset()}catch(e){}S=fresh();save();renderAll();toast('Sample data reset')}
 function now(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
 function logNS(dir,t,d){S.log.push([now(),dir,t,d]);save();renderLog()}
 function toast(t){let el=document.getElementById('toast');if(!el){el=document.createElement('div');el.id='toast';el.style.cssText='position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#00b04f;color:#fff;font-weight:600;padding:10px 16px;border-radius:12px;z-index:80;box-shadow:0 10px 30px #0008;font-size:14px;transition:opacity .3s';document.body.appendChild(el)}el.textContent=t;el.style.opacity=1;clearTimeout(el._t);el._t=setTimeout(()=>el.style.opacity=0,2400)}
 
 function tagWide(){document.querySelectorAll('.card table').forEach(t=>{const n=t.rows[0]?t.rows[0].cells.length:0;t.classList.toggle('wide',n>=4)})}
+
+/* ---------- DISPATCH (sample messaging) ---------- */
+const DMT=[
+ {id:'rnd',name:'Randolph DC · Receiving',role:'Shop distribution center · Randolph, NJ',av:'RD',c:'#00b04f'},
+ {id:'mpl',name:'Minneapolis · Shipping',role:'Subscription box site · Minneapolis, MN',av:'MN',c:'#c9f26b'},
+ {id:'la',name:'Los Angeles node · Floor lead',role:'HTL partner building · 75,000 sq ft',av:'LA',c:'#f2b84b'},
+ {id:'clt',name:'Charlotte · Warehouse team',role:'HTL warehouse space · 250,000+ sq ft',av:'CL',c:'#7e93ff'},
+ {id:'htl',name:'HTL dispatch · Xander',role:'Your single point of contact · 610-731-3506',av:'X',c:'#3ec7c2'}];
+const DMSEED={
+ rnd:[['in','Receiving','Mon','07:42','Morning. Door 3 is open for GS-24105 at 10:00. Container MSCU 773014-8 is out of the port.'],['out','You','Mon','07:50','Thanks. Can you send the count once it is unloaded?'],['in','Receiving','Mon','10:31','Unloaded 1,210 cartons, clean count. POD is in NetSuite on PO-118161.']],
+ mpl:[['in','Shipping','Tue','14:05','GS-24115 checked in at Toledo, still on schedule for Thursday. We have Door 1 held.']],
+ la:[['in','Floor lead','Wed','09:12','Racking for Shop forward stock is set. We can take the first transfer (GS-24106) on Wednesday next week.'],['out','You','Wed','09:20','Perfect. Is there room for the seasonal overflow too?'],['in','Floor lead','Wed','09:26','Yes, 13,000 sq ft is set aside for it.']],
+ clt:[['in','Warehouse team','Thu','08:15','Dock slot Fri 07:30 confirmed for GS-24116. Two doors open if you need a second truck.']],
+ htl:[['in','Xander','Today','08:00','Morning! Two loads in transit, one booked for Friday. Text me here anytime, day or night.']]};
+let DM;try{DM=JSON.parse(localStorage.getItem('gsusa_taz_dm_v1'))}catch(e){DM=null}
+if(!DM){DM={t:JSON.parse(JSON.stringify(DMSEED)),un:{rnd:0,mpl:1,la:0,clt:1,htl:0},cur:'htl'}}
+function dmSave(){try{localStorage.setItem('gsusa_taz_dm_v1',JSON.stringify(DM))}catch(e){}}
+function dmLink(t){return t.replace(/\b(GS-\d{5})\b/g,'<span class="lk" onclick="openLoad(\'$1\')">$1</span>').replace(/\b((?:PO|TO)-\d{5,6})\b/g,'<b>$1</b>')}
+function dmBadges(){const n=Object.values(DM.un).reduce((a,b)=>a+b,0);['dmnav','dmtab'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=n||''})}
+function dmRenderList(){$('#dmlist').innerHTML=DMT.map(t=>{const m=DM.t[t.id],l=m[m.length-1];return `<div class="dmt ${DM.cur===t.id?'on':''}" data-id="${t.id}"><div class="dmav" style="background:${t.c}">${t.av}</div><div style="min-width:0"><b>${t.name}</b><small>${l?(l[0]==='out'?'You: ':'')+l[4].replace(/<[^>]+>/g,''):''}</small></div><div class="tm">${l?l[2]+'<br>'+l[3]:''}${DM.un[t.id]?`<br><span class="dmbadge">${DM.un[t.id]}</span>`:''}</div></div>`}).join('');
+ document.querySelectorAll('.dmt').forEach(d=>d.onclick=()=>dmOpen(d.dataset.id))}
+function dmRenderConv(){const t=DMT.find(x=>x.id===DM.cur);const m=DM.t[t.id];
+ $('#dmhead').innerHTML=`<button class="bk" onclick="document.querySelector('.dmwrap').classList.remove('open')">‹</button><div class="dmav" style="background:${t.c}">${t.av}</div><div><b>${t.name}</b><div style="font-size:12px;color:var(--mute)">${t.role}</div></div>`;
+ let h='',day='';m.forEach(x=>{if(x[2]!==day){day=x[2];h+=`<div class="dmday">${day}</div>`}h+=`<div class="dmm ${x[0]}">${x[0]==='in'?`<div class="who2">${x[1]}</div>`:''}${dmLink(x[4])}<div class="tt">${x[3]}</div></div>`});
+ $('#dmmsgs').innerHTML=h;$('#dmmsgs').scrollTop=1e6;
+ const Q={rnd:['Is Door 3 open at 2pm?','Confirm receipt of PO-118161','Any shorts on GS-24112?'],mpl:['ETA on GS-24115?','Can you hold Door 1 Thursday?'],la:['When can you take GS-24106?','How much space is open?'],clt:['Can you take an extra truck Friday?','Confirm GS-24116 slot'],htl:['Need an extra FTL this week','Where is GS-24106?','Can you call me?']}[t.id];
+ $('#dmquick').innerHTML=Q.map(q=>`<button>${q}</button>`).join('');document.querySelectorAll('#dmquick button').forEach(b=>b.onclick=()=>{$('#dmin').value=b.textContent;dmSend()})}
+function dmOpen(id){DM.cur=id;DM.un[id]=0;dmSave();dmRenderList();dmRenderConv();dmBadges();document.querySelector('.dmwrap').classList.add('open')}
+function dmDay(){return 'Today'}
+function dmReply(id,q){const t=q.toLowerCase();const m=q.match(/GS-?\s?(\d{5})/i);const name={rnd:'Receiving',mpl:'Shipping',la:'Floor lead',clt:'Warehouse team',htl:'Xander'}[id];
+ if(m){const r=S.loads.find(x=>x[0]==='GS-'+m[1]);if(r)return [name,`GS-${m[1]} is ${r[3].toLowerCase()}: ${r[5]}.`]}
+ if(/door|dock|slot/.test(t))return [name,'Yes, that door is open. I have put you down and it shows on the dock schedule now.'];
+ if(/receipt|count|short|pod/.test(t))return [name,'Confirmed. Counts match the PO and the POD is attached in NetSuite.'];
+ if(/extra|truck|ftl|capacity|space/.test(t))return [name,id==='htl'?'On it. WLX has a truck available, I will send pickup and delivery times within the hour.':'We can make room. Send the load details and we will slot it.'];
+ if(/call/.test(t))return [name,'Calling you in five minutes.'];
+ return [name,'Got it, checking now and I will update you here shortly.']}
+function dmSend(e){if(e)e.preventDefault();const v=$('#dmin').value.trim();if(!v)return;const id=DM.cur;DM.t[id].push(['out','You',dmDay(),now(),v.replace(/</g,'&lt;')]);$('#dmin').value='';dmSave();dmRenderConv();dmRenderList();
+ const ty=document.createElement('div');ty.className='dmtyping';ty.textContent=DMT.find(x=>x.id===id).name.split(' · ')[0]+' is typing…';$('#dmmsgs').appendChild(ty);$('#dmmsgs').scrollTop=1e6;
+ setTimeout(()=>{const [n,txt]=dmReply(id,v);DM.t[id].push(['in',n,dmDay(),now(),txt]);if(DM.cur!==id||!document.getElementById('dispatch').classList.contains('on'))DM.un[id]=(DM.un[id]||0)+1;dmSave();dmRenderConv();dmRenderList();dmBadges()},1400)}
+function dmAttach(){const r=S.loads.find(x=>x[3]==='In transit')||S.loads[0];$('#dmin').value=($('#dmin').value+' '+r[0]).trim();$('#dmin').focus()}
+function dmReset(){DM={t:JSON.parse(JSON.stringify(DMSEED)),un:{rnd:0,mpl:1,la:0,clt:1,htl:0},cur:'htl'};dmSave();dmRenderList();dmRenderConv();dmBadges()}
+dmRenderList();dmRenderConv();dmBadges();
 /* ---------- LOADS ---------- */
 const stc={Delivered:'del','In transit':'tr',Booked:'bk',Rescheduled:'ap'};
 function laneOf(id){return LANES.find(l=>l.id===id)}
@@ -856,7 +951,7 @@ function renderLoads(){
  const rows=S.loads.filter(r=>LF==='all'||laneOf(r[1]).dest===LF);
  $('#loadtbl').innerHTML='<tr><th>Load</th><th>Lane</th><th>Mode</th><th>Ship</th><th>NetSuite</th><th>Equipment</th><th>Status</th><th>Latest</th></tr>'+rows.map(r=>{const l=laneOf(r[1]);return `<tr class="click" data-id="${r[0]}"><td><b>${r[0]}</b></td><td style="white-space:nowrap"><i class="lane-sw" style="background:${C[l.id]}"></i>${l.name}</td><td><span class="mode ${l.mode}">${l.mode==='D'?'DRAY':'FTL'}</span></td><td>${r[2]}</td><td style="color:var(--teal);white-space:nowrap">${r[6]}</td><td style="color:var(--mute);white-space:nowrap">${r[4]}</td><td><span class="st ${stc[r[3]]}">${r[3]}</span></td><td style="color:var(--mute)">${r[5]}</td></tr>`}).join('');
  document.querySelectorAll('#loadtbl tr.click').forEach(tr=>tr.onclick=()=>openLoad(tr.dataset.id));
- $('#loadcards').innerHTML=rows.map(r=>{const l=laneOf(r[1]);return `<div class="lc" data-id="${r[0]}"><div class="r1"><b>${r[0]}</b><span class="st ${stc[r[3]]}">${r[3]}</span></div><div class="r2"><i class="lane-sw" style="background:${C[l.id]}"></i>${l.name} <span class="mode ${l.mode}">${l.mode==='D'?'DRAY':'FTL'}</span></div><div class="r3">${r[5]}</div><div class="r3" style="color:var(--teal);margin-top:2px">${r[6]} · ships ${r[2]} · ${(r[8]||0).toLocaleString()} cartons</div></div>`}).join('');
+ $('#loadcards').innerHTML=rows.map(r=>{const l=laneOf(r[1]);return `<div class="lc" data-id="${r[0]}"><div class="r1"><b>${r[0]}</b><span class="st ${stc[r[3]]}">${r[3]}</span></div><div class="r2"><i class="lane-sw" style="background:${C[l.id]}"></i>${l.name} <span class="mode ${l.mode}">${l.mode==='D'?'DRAY':'FTL'}</span></div><div class="r3">${r[5]}</div><div class="r3" style="color:var(--teal);margin-top:2px">NetSuite ${r[6]} · ships ${r[2]} · ${(r[8]||0).toLocaleString()} cartons</div><div class="r3">${r[4]}</div></div>`}).join('');
  document.querySelectorAll('#loadcards .lc').forEach(d=>d.onclick=()=>openLoad(d.dataset.id));
 }
 document.querySelectorAll('#loadfilter button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#loadfilter button').forEach(x=>x.classList.remove('on'));b.classList.add('on');LF=b.dataset.f;renderLoads()});
@@ -1282,8 +1377,8 @@ document.querySelectorAll('#rp-quick .qbtn').forEach(b=>b.onclick=()=>setReport(
 runReport({ds:'loads',gb:'status'});
 
 /* ---------- ASK TAZ ---------- */
-const PAGES=[['journey',/journey|test order|reminder|parcel|so145692267/],['intl',/international|overseas|dhl|abroad|customs|worldwide/],['sources',/^sources?$/],['overflow',/overflow/],['netsuite',/netsuite|integrat|sync|erp|system of record|item receipt|purchase order|transfer order/],['reports',/^reports?$|report builder/],['exceptions',/exception|issue|problem|delay|late|claim|short|document|pod|bol|paperwork/],['docks',/dock|appointment|receiving|slot|door/],['loads',/load board|loads?\b|shipment|truck|track|container|trailer/],['plan',/plan|month|forecast|inbound|season|volume/],['west',/warehouse|west|california|los angeles|\bla\b|charlotte|space|sq ?ft|square|node|lease|transload/],['roadmap',/roadmap|timeline|june|pilot|next step|cookie season|when/],['research',/research|learn|source|findings|call notes/],['method',/assumption|estimate|method|how did you|calculat/],['overview',/map|network|overview|home|dashboard|lanes?/]];
-const PAGENAME={journey:'Order journey',intl:'International',overflow:'Overflow help',councils:'Troops & councils',netsuite:'NetSuite',reports:'Reports',exceptions:'Exceptions & docs',docks:'Dock schedule',loads:'Load board',plan:'Inbound plan',west:'Warehouse nodes',roadmap:'Roadmap',research:'Research library',method:'How we estimated',overview:'Network'};
+const PAGES=[['dispatch',/dispatch|message|text the|dm |chat with|warehouse team/],['journey',/journey|test order|reminder|parcel|so145692267/],['intl',/international|overseas|dhl|abroad|customs|worldwide/],['sources',/^sources?$/],['overflow',/overflow/],['netsuite',/netsuite|integrat|sync|erp|system of record|item receipt|purchase order|transfer order/],['reports',/^reports?$|report builder/],['exceptions',/exception|issue|problem|delay|late|claim|short|document|pod|bol|paperwork/],['docks',/dock|appointment|receiving|slot|door/],['loads',/load board|loads?\b|shipment|truck|track|container|trailer/],['plan',/plan|month|forecast|inbound|season|volume/],['west',/warehouse|west|california|los angeles|\bla\b|charlotte|space|sq ?ft|square|node|lease|transload/],['roadmap',/roadmap|timeline|june|pilot|next step|cookie season|when/],['research',/research|learn|source|findings|call notes/],['method',/assumption|estimate|method|how did you|calculat/],['overview',/map|network|overview|home|dashboard|lanes?/]];
+const PAGENAME={dispatch:'Dispatch',journey:'Order journey',intl:'International',overflow:'Overflow help',councils:'Troops & councils',netsuite:'NetSuite',reports:'Reports',exceptions:'Exceptions & docs',docks:'Dock schedule',loads:'Load board',plan:'Inbound plan',west:'Warehouse nodes',roadmap:'Roadmap',research:'Research library',method:'How we estimated',overview:'Network'};
 const MONTHFULL=['january','february','march','april','may','june','july','august','september','october','november','december'];
 function siteIn(t){if(/randolph|new jersey|\bnj\b/.test(t))return 'Randolph';if(/minneapolis|minnesota|\bmn\b|subscription/.test(t))return 'Minneapolis';if(/los angeles|\bla\b|west|california/.test(t))return 'Los Angeles';if(/charlotte|\bnc\b|carolina/.test(t))return 'Charlotte';return 'all'}
 function statusIn(t){if(/in transit|moving|on the road/.test(t))return 'In transit';if(/delivered|received|complete/.test(t))return 'Delivered';if(/booked|scheduled|upcoming/.test(t))return 'Booked';if(/reschedul/.test(t))return 'Rescheduled';return 'all'}
@@ -1310,6 +1405,7 @@ function answer(t){
   return bot(`Built <b>${r.title}</b>${r.meta.includes('·')&&!r.meta.startsWith('Generated')?' ('+r.meta.split(' · Generated')[0]+')':''}: ${r.rows.length} rows. Here's a preview:`+tableHTML(r,6),[['Download CSV',csvReport],['Print / PDF',printReport],['Open full report',()=>go('reports')]]);
  }
  if(/source|where.*(number|data|figure)|cite|citation/.test(t)){go('sources');return bot('Here are the <b>sources</b>. Every figure is tagged: Nov 3 call, public (with links), HTL network, HTL model or sample data.')}
+ if(/dispatch|message|text the|dm |chat with|warehouse team/.test(t)&&!/report/.test(t)){go('dispatch');return bot('Here is <b>Dispatch</b>. Message any site directly: Randolph, Minneapolis, Los Angeles, Charlotte or HTL. Mention a load like GS-24106 and it links straight to the load.')}
  // overflow help
  if(/overflow|final mile|ftl|full truck|need (a )?(truck|trailer|space|help)|extra (truck|space|capacity)|surge|expedite|stuck|can.?t fit|won.?t fit/.test(t)&&!/report/.test(t)){go('overflow');return bot('The <b>overflow desk</b> handles full truckload and final mile first, plus drayage and space. Fill in what needs to move and it goes straight to HTL with everything filled in, or call/text <b>610-731-3506</b>. Requests go straight to Xander, backed by WLX, HTL\'s dedicated carrier partner of five years.',[['Open the request form',()=>{go('overflow');$('#o-qty').focus()}]])}
  // international
@@ -1343,8 +1439,8 @@ function answer(t){
 }
 
 /* ---------- NAV ---------- */
-const TITLES={journey:['Order journey','Follow one real parcel through every system'],intl:['International','DHL Express through HTL, plus ocean and air freight'],sources:['Sources','Where every number comes from'],overflow:['Overflow help','Freight that won’t fit? HTL keeps it moving'],councils:['Troops & councils','Where Girl Scouts are, and the node that serves them'],reports:['Reports','Build, download and print'],research:['Research library','What we know, and where it came from'],netsuite:['NetSuite','Your system of record, connected'],overview:['Network','Your freight picture at a glance'],loads:['Load board','Every load HTL would run, in one place'],plan:['Inbound plan','What arrives, where and when'],docks:['Dock schedule','Booked into your receiving windows'],west:['Warehouse nodes','Los Angeles 75,000 sq ft · Charlotte 250,000+ sq ft'],exceptions:['Exceptions & docs','Problems and fixes, side by side'],roadmap:['Roadmap','On your timing'],method:['How we estimated','Our assumptions, in the open']};
-function go(p){document.body.classList.remove('navopen');document.querySelectorAll('#tabbar button[data-t]').forEach(x=>x.classList.toggle('on',x.dataset.t===p));setTimeout(tagWide,0);document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.p===p));document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id===p));$('#ptitle').textContent=TITLES[p][0];$('#psub').textContent=TITLES[p][1];closeDrawer();scrollTo(0,0)}
+const TITLES={dispatch:['Dispatch','Message the warehouse teams directly'],journey:['Order journey','Follow one real parcel through every system'],intl:['International','DHL Express through HTL, plus ocean and air freight'],sources:['Sources','Where every number comes from'],overflow:['Overflow help','Freight that won’t fit? HTL keeps it moving'],councils:['Troops & councils','Where Girl Scouts are, and the node that serves them'],reports:['Reports','Build, download and print'],research:['Research library','What we know, and where it came from'],netsuite:['NetSuite','Your system of record, connected'],overview:['Network','Your freight picture at a glance'],loads:['Load board','Every load HTL would run, in one place'],plan:['Inbound plan','What arrives, where and when'],docks:['Dock schedule','Booked into your receiving windows'],west:['Warehouse nodes','Los Angeles 75,000 sq ft · Charlotte 250,000+ sq ft'],exceptions:['Exceptions & docs','Problems and fixes, side by side'],roadmap:['Roadmap','On your timing'],method:['How we estimated','Our assumptions, in the open']};
+function go(p){document.body.classList.remove('navopen');if(p==='dispatch'&&innerWidth>820&&typeof DM!=='undefined'){DM.un[DM.cur]=0;dmSave();dmRenderList();dmBadges()}if(p==='dispatch'&&innerWidth<=820)document.querySelector('.dmwrap').classList.remove('open');document.querySelectorAll('#tabbar button[data-t]').forEach(x=>x.classList.toggle('on',x.dataset.t===p));setTimeout(tagWide,0);document.querySelectorAll('#nav button').forEach(x=>x.classList.toggle('on',x.dataset.p===p));document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id===p));$('#ptitle').textContent=TITLES[p][0];$('#psub').textContent=TITLES[p][1];closeDrawer();scrollTo(0,0)}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>go(b.dataset.p));
 function enter(){$('#viewchip').textContent='Viewing as '+$('#viewas').value;$('#veil').style.display='none'}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
