@@ -288,6 +288,9 @@ svg text:not([fill]){fill:#E8ECEA}
         <div style="text-align:right"><div class="count num" id="countdown" style="color:#fff">—</div><div style="color:#E3F6EA">days to the <b>Jan 12</b> online launch</div></div></div>
       </div>
       <div class="grid g4" id="kpis"></div>
+      <div class="card" style="margin-top:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-color:#5A1E43;background:linear-gradient(90deg,#1B0E16,#13171A)">
+        <div style="font-size:30px">⚑</div><div style="flex:1;min-width:240px"><b style="font-size:15px">14 lessons from past seasons, each matched to a fix</b><div class="hint" style="margin:2px 0 0">Online sell-outs, baker shortages, systems not syncing, wide delivery windows, leftover stock and more. All from the public record.</div></div>
+        <button class="btn" onclick="go('radar')">See season risks →</button><button class="btn ghost" onclick="go('launch')">Jan 12 launch control →</button></div>
       <div class="grid g21" style="margin-top:16px">
         <div class="card">
           <h3>The shipping year <span class="tag">Estimate</span></h3><p class="hint">Modeled parcels per month by program — the Shop peaks with the troop year, cookies own Jan–Apr.</p>
@@ -425,6 +428,18 @@ svg text:not([fill]){fill:#E8ECEA}
         <div class="tools" style="margin:0"><input id="sq" placeholder="Search SKU, item, bin…" style="min-width:200px"><select id="sc"><option value="">All categories</option></select><select id="ss"><option value="">All statuses</option><option>OK</option><option>Low</option><option>Reorder</option><option>Overstock</option><option>Pre-launch</option></select></div></div>
       <div class="tbl-wrap"><table><thead><tr><th>SKU</th><th>Item</th><th>Category</th><th>Bin</th><th class="right">On hand</th><th class="right">Allocated</th><th class="right">Available</th><th class="right">Ships / day</th><th class="right">Days of cover</th><th>Status</th></tr></thead><tbody id="stb" style="cursor:default"></tbody></table></div>
       <div class="pager"><span id="spinfo"></span><button class="btn ghost" onclick="spg(-1)">‹ Prev</button><button class="btn ghost" onclick="spg(1)">Next ›</button></div>
+      <div class="section-title"><h3>Variety switchboard · shipped orders</h3><span class="hint" style="margin:0">When a baker runs short, switch a variety off for shipping in one place. The storefront, open orders and customer messages update together.</span></div>
+      <div class="card"><div class="row" style="margin-bottom:10px"><div class="seg" id="vsb"><button class="on" data-b="LBB">Little Brownie Bakers</button><button data-b="ABC">ABC Bakers</button></div><span class="sp"></span><span class="tag">Sample</span></div>
+        <div id="vsw"></div><div id="vswmsg" style="margin-top:10px"></div></div>
+      <div class="grid" style="margin-top:16px">
+        <div class="card"><div class="row"><h3 style="margin:0">Shelf life &amp; sell-through</h3><span class="sp"></span><span class="tag">Sample</span></div>
+          <p class="hint">Cookies carry about a 12-month shelf life. Oldest lots ship first, and the season-end forecast shows any surplus early enough to plan donations (Cookie Share, Hometown Heroes).</p>
+          <div class="tbl-wrap"><table><thead><tr><th>Lot</th><th>Variety</th><th>Baked</th><th>Best by</th><th class="right">Pkgs</th><th>Ships</th></tr></thead><tbody id="lots" style="cursor:default"></tbody></table></div>
+          <div class="chart-wrap" id="sellthru" style="margin-top:12px"></div></div>
+        <div class="card"><div class="row"><h3 style="margin:0">Shop backorders</h3><span class="sp"></span><span class="tag">Sample</span></div>
+          <p class="hint">Backordered items can mean a second box and a second shipping charge. TAZ holds or splits each order by rule, and the member sees the plan at checkout.</p>
+          <div id="bo"></div></div>
+      </div>
       <div class="section-title"><h3>Inbound to Randolph</h3><span class="hint" style="margin:0">Receiving — purchase orders and containers due in</span></div>
       <div class="tbl-wrap"><table><thead><tr><th>Inbound</th><th>From</th><th>Mode</th><th>Contents</th><th>Due</th><th>Status</th></tr></thead><tbody id="inb" style="cursor:default"></tbody></table></div>
     </section>
@@ -488,6 +503,13 @@ svg text:not([fill]){fill:#E8ECEA}
           <li>Leave Name and Address 1 off. Send under the NDA.</li>
         </ol>
         <p class="hint" style="margin:8px 0 0">If a label app (ShipStation, Pacejet, EasyPost…) prints your labels, its shipment export is faster and already includes weights and dimensions.</p>
+      </div>
+      <div class="grid g21" style="margin-top:16px">
+        <div class="card"><div class="row"><h3 style="margin:0">Cookie order sizes vs shipping tiers</h3><span class="sp"></span><span class="tag">Sample data</span></div>
+          <p class="hint">Customer shipping is a flat fee per tier: 4–8 packages, 9–12, then another block for each extra 12. Bars show where sample orders land. Pink bars just cross into a new tier. Package counts here are estimated from parcel weight in the sample data; Digital Cookie order data replaces them once connected.</p>
+          <div class="chart-wrap" id="tiers"></div></div>
+        <div class="card"><h3>What the tiers tell you</h3><p class="hint">Inputs for the Digital Cookie product team. These are not a pricing recommendation.</p><ul class="facts" id="tierfacts"></ul>
+          <div class="q" style="margin-top:12px"><b>Idea to test</b><span>Show a nudge at checkout, e.g. "Add 2 more packages; your shipping stays the same."</span></div></div>
       </div>
     </section>
 
@@ -621,6 +643,103 @@ svg text:not([fill]){fill:#E8ECEA}
     </section>
 
     <!-- SUPPORT -->
+
+    <!-- SEASON RISKS -->
+    <section class="page" id="p-radar">
+      <div class="card" style="background:linear-gradient(115deg,#1B0E16,#3A0F2A);border-color:#5A1E43">
+        <div style="font-size:12px;letter-spacing:.8px;font-weight:900;color:var(--star)">LESSONS FROM PAST SEASONS</div>
+        <h3 style="color:#fff;font-size:22px;margin:4px 0 6px">Built around what has actually gone wrong before.</h3>
+        <p style="margin:0;color:#E9C9DA;max-width:860px">Every item below comes from the public record: council notices, GSUSA's own FAQs and news coverage. Each one is matched to a feature already in this beta, so the 2027 season starts with these covered. Click any risk to jump to where it's handled.</p>
+      </div>
+      <div class="grid g21" style="margin-top:16px">
+        <div class="card"><div class="row"><h3 style="margin:0">Risk map</h3><span class="sp"></span><span class="tag">From public record</span></div>
+          <p class="hint">How often it has come up vs how much it hurts the member experience. Dot number = risk card below.</p>
+          <div class="chart-wrap" id="riskmx"></div></div>
+        <div class="card"><h3>Coverage in this beta</h3><p class="hint">Where each lesson lives in the portal.</p><div id="riskcov"></div>
+          <div class="q" style="margin-top:12px"><b>Why it matters for 2027</b><span>Patch Pals and Sparkables launch Jan 12 as online-only, direct-ship products. The last online exclusive sold out in under a day.</span></div></div>
+      </div>
+      <div class="section-title"><h3>The lessons, one by one</h3><div class="seg" id="riskf"><button class="on" data-f="">All</button><button data-f="Cookies">Cookies</button><button data-f="Shop">Shop</button><button data-f="Launch">Launch</button></div></div>
+      <div class="grid g2" id="risks"></div>
+      <p class="hint" style="margin-top:14px">Sources are public. Wording is HTL's summary, not a quote. Nothing here uses GSUSA internal data.</p>
+    </section>
+
+    <!-- LAUNCH CONTROL -->
+    <section class="page" id="p-launch">
+      <div class="card" style="background:linear-gradient(115deg,#2A0A1E,#AF0061);color:#fff;border:0">
+        <div class="row"><div style="flex:1;min-width:260px">
+          <div style="font-size:12px;letter-spacing:.8px;font-weight:900;color:var(--star)">LAUNCH CONTROL · PATCH PALS &amp; SPARKABLES</div>
+          <h3 style="color:#fff;font-size:23px;margin:4px 0 6px">Two online-only products. One launch day. No oversell.</h3>
+          <p style="margin:0;color:#FBD9EA;max-width:760px">Patch Pals (with BARK) and Girl Scout Sparkables (with Partake) go on sale for direct shipping on Jan 12, 2027. This room plans the surge, guards inventory at checkout, flags resale buying and onboards the new ship-from partners.</p>
+        </div><div style="text-align:right"><div class="count num" id="lcount" style="color:#fff">—</div><div style="color:#FBD9EA">days to launch</div></div></div>
+      </div>
+      <div class="grid g4" style="margin-top:16px" id="lkpis"></div>
+
+      <div class="section-title"><h3>Launch-day surge planner <span class="tag">Volume only</span></h3><span class="hint" style="margin:0">Move the sliders. Orders arriving per hour vs labels the ship sites can produce.</span></div>
+      <div class="grid g21">
+        <div class="card"><div class="chart-wrap" id="surge"></div>
+          <div class="legend" style="margin-top:8px"><span><i style="background:#FF7BC0"></i>Orders arriving</span><span><i style="background:#D5F267"></i>Labels produced</span><span><i style="background:#F5B800"></i>Backlog waiting</span></div></div>
+        <div class="card">
+          <label class="fld"><span>Launch-week orders · <b id="v_lw">48,000</b></span><input type="range" id="s_lw" min="10000" max="200000" step="2000" value="48000"></label>
+          <label class="fld"><span>Share that lands on day 1 · <b id="v_d1">35%</b></span><input type="range" id="s_d1" min="10" max="70" step="1" value="35"></label>
+          <label class="fld"><span>Label capacity per hour (all sites) · <b id="v_cap">1,200</b></span><input type="range" id="s_cap" min="200" max="5000" step="100" value="1200"></label>
+          <label class="fld"><span>Ship-site hours per day · <b id="v_hr">16</b></span><input type="range" id="s_hr" min="8" max="24" step="1" value="16"></label>
+          <ul class="facts" id="surgeout"></ul>
+        </div>
+      </div>
+
+      <div class="section-title"><h3>Oversell guard</h3><span class="hint" style="margin:0">Run the first launch hour both ways against the same stock.</span></div>
+      <div class="grid g2">
+        <div class="card"><div class="row"><h3 style="margin:0">Sell first, check stock later</h3><span class="sp"></span><span class="tag red">How 2023 went</span></div>
+          <p class="hint">Orders are taken, then matched to stock when processed. Late orders get cancelled after the customer has paid.</p><div id="og_a"></div></div>
+        <div class="card"><div class="row"><h3 style="margin:0">Reserve at checkout · TAZ</h3><span class="sp"></span><span class="tag g">Built in beta</span></div>
+          <p class="hint">Each order holds its packages the moment it's placed. When stock hits zero the product shows sold out before anyone pays.</p><div id="og_b"></div></div>
+      </div>
+      <div class="row" style="margin-top:10px"><label class="fld" style="margin:0;min-width:220px"><span>Launch stock (packages)</span><input id="og_stock" type="number" value="10000" min="1000" step="500"></label>
+        <label class="fld" style="margin:0;min-width:220px"><span>Orders in hour 1</span><input id="og_orders" type="number" value="3200" min="100" step="100"></label>
+        <button class="btn" id="og_run" style="margin-top:18px">▶ Run launch hour</button></div>
+
+      <div class="grid g21" style="margin-top:16px">
+        <div class="card"><div class="row"><h3 style="margin:0">Resale watch</h3><span class="sp"></span><span class="tag">Sample</span></div>
+          <p class="hint">Orders that look like buying to resell, held for review before labels print. Rules are set by GSUSA.</p>
+          <div class="tools" style="margin-bottom:8px" id="rwrules"></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Order</th><th>Signal</th><th class="right">Pkgs</th><th>Ship to</th><th>Action</th></tr></thead><tbody id="rw" style="cursor:default"></tbody></table></div></div>
+        <div class="card"><h3>New ship-from partners</h3><p class="hint">What TAZ needs from each co-packer before Jan 12. Shared checklist, owned jointly.</p><div id="copack"></div></div>
+      </div>
+
+      <div class="section-title"><h3>Launch runbook</h3><span class="hint" style="margin:0">Who does what, from T-30 to T+14</span></div>
+      <div class="card"><ul class="tl" id="runbook"></ul></div>
+    </section>
+
+    <!-- EXCEPTIONS -->
+    <section class="page" id="p-exc">
+      <div class="grid g4" id="exkpis"></div>
+      <div class="grid g21" style="margin-top:16px">
+        <div class="card"><div class="row"><h3 style="margin:0">Order pipeline · sync monitor</h3><span class="sp"></span><span class="tag">Sample</span></div>
+          <p class="hint">Every order checked at each hand-off: storefront → payment → baker or DC → label → first scan → delivered. Anything stuck past its limit lands in the queue below.</p>
+          <div id="pipe"></div></div>
+        <div class="card"><div class="row"><h3 style="margin:0">Weather watch</h3><span class="sp"></span><span class="tag">Sample event</span></div>
+          <p class="hint">Winter storm over the South Central states. Parcels moving into the shaded area get a proactive heads-up.</p>
+          <div class="chart-wrap" id="wxmap"></div><div id="wxsum" style="font-size:13px;color:var(--ink2);margin-top:6px"></div></div>
+      </div>
+      <div class="section-title"><h3>Exception queue</h3>
+        <div class="tools" style="margin:0"><select id="exf"><option value="">All types</option></select><select id="exp"><option value="">All programs</option></select></div></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Type</th><th>Order</th><th>Program</th><th>Carrier</th><th>Ship to</th><th class="right">Age</th><th>Promise</th><th>Next step</th></tr></thead><tbody id="exq" style="cursor:default"></tbody></table></div>
+      <div class="pager"><span id="exinfo"></span></div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card"><div class="row"><h3 style="margin:0">Customer notice</h3><span class="sp"></span><select id="ntpl" style="padding:7px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#111417;color:var(--ink)"></select></div>
+          <p class="hint">Sent before the customer has to ask. Wording approved by GSUSA; carrier and dates filled in automatically.</p>
+          <div id="notice"></div></div>
+        <div class="card"><h3>Report damaged cookies</h3><p class="hint">Members or councils send a photo and order number. A claim is filed with the carrier and a replacement can go out the same day.</p>
+          <div class="grid g2" style="gap:10px">
+            <label class="fld"><span>Order number</span><input id="dm_o" placeholder="e.g. DC-1048821"></label>
+            <label class="fld"><span>Packages damaged</span><input id="dm_n" type="number" value="2" min="1"></label></div>
+          <label class="fld"><span>What happened</span><select id="dm_t"><option>Box crushed in transit</option><option>Packages broken inside the case</option><option>Wet or water damage</option><option>Wrong variety received</option><option>Missing packages</option></select></label>
+          <label class="fld"><span>Photo</span><input type="file" id="dm_p" accept="image/*"></label>
+          <div id="dm_prev"></div>
+          <button class="btn" id="dm_go">File claim</button><div id="dm_out" style="margin-top:10px"></div></div>
+      </div>
+    </section>
+
     <section class="page" id="p-help">
       <div class="grid g2">
         <div class="card">
@@ -681,21 +800,27 @@ prog:'<rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width=
 analysis:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
 bill:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',
 svc:'<path d="M2 16V7h12v9M14 10h4l3 3v3h-7"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>',
+radar:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6-6"/><circle cx="12" cy="12" r="1.3"/>',
+launch:'<path d="M12 2c3 2 5 6 5 10l-2 4H9l-2-4c0-4 2-8 5-10z"/><circle cx="12" cy="10" r="2"/><path d="M9 16l-3 4M15 16l3 4M12 17v4"/>',
+exc:'<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.1"/>',
 help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.2v.1"/>'};
 const PAGES=[
  ['exec','Home','Your distribution picture at a glance','START'],
  ['tools','Exec tools','NetSuite, made executive-ready','START'],
+ ['radar','Season risks','Lessons from past seasons, each matched to a fix','START'],
+ ['launch','Jan 12 launch','Patch Pals & Sparkables launch control','OPERATIONS'],
  ['map','Sites','Every building your parcels start from','OPERATIONS'],
  ['stock','Stock','Cookie and Shop inventory','OPERATIONS'],
  ['svc','Freight','FTL & LTL · quotes, loads, lanes and documents','OPERATIONS'],
  ['ship','Tracking','Every parcel, every carrier','OPERATIONS'],
+ ['exc','Exceptions','Late, stuck, damaged or at risk, handled before members ask','OPERATIONS'],
  ['bill','Billing','Billing and invoice audit','OPERATIONS'],
  ['prog','Programs','Girl Scout Shop · Cookies · Patch Pals','VISIBILITY'],
  ['analysis','Analysis','Pre-season parcel analysis','VISIBILITY'],
  ['road','Roadmap','From beta to live','VISIBILITY'],
  ['int','Setup','Integrations with your systems','SETUP'],
  ['help','Support','Reach your team','SETUP']];
-const ROLES={exec:['exec','tools','map','stock','bill','prog','road','help'],ops:PAGES.map(p=>p[0]),fin:['exec','tools','ship','bill','analysis','road','help']};
+const ROLES={exec:['exec','tools','radar','launch','map','stock','exc','bill','prog','road','help'],ops:PAGES.map(p=>p[0]),fin:['exec','tools','radar','ship','exc','bill','analysis','road','help']};
 let ROLE='exec';
 function buildNav(){let g='',h='';PAGES.filter(p=>ROLES[ROLE].includes(p[0])).forEach(([k,l,_,grp])=>{if(grp!=g){g=grp;h+=`<div class="navgrp">${grp}</div>`}h+=`<button data-k="${k}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[k]}</svg>${l}</button>`});$('#nav').innerHTML=h}
 buildNav();
@@ -1184,6 +1309,246 @@ function help(){const t=$('#ht').value,n=$('#hn').value,m=$('#hm').value;
  $('#hok').textContent='Opening your email…'}
 
 go('exec');
+
+// =================== SEASON RISKS / LAUNCH / EXCEPTIONS (overnight build) ===================
+const RZ=rng(91103);
+const SRC={
+ rr1:['ABC7 / CNN · Mar 2023','https://abc7.com/post/girl-scouts-raspberry-rally-new-cookie-ebay/12909915/'],
+ rr2:['Boston Globe · Mar 2023','https://www.bostonglobe.com/2023/03/06/lifestyle/its-girl-scout-cookie-season-mass-this-flavor-is-one-that-sold-out'],
+ rr3:['GS of Western NY notice · Feb 2023','https://www.gswny.org/content/dam/girlscouts-gswny/documents/product-program/23_cookie-program/Raspberry%20Rally%20Statement%202_16_2023.pdf'],
+ lbb:['NBC News · 2023','https://www.nbcnews.com/news/us-news/girl-scout-cookie-shortage-blamed-delays-louisville-kentucky-manufactu-rcna74379'],
+ npr:['NPR · Jan 2022','https://www.npr.org/2022/01/19/1074161966/girl-scout-cookie-adventurefuls-supply-chain'],
+ sil:['GS of Southern Illinois · 2022','https://gsofsi.org/en/news/2022/22-Digital-Cookie-News.html'],
+ jsy:['Jersey Shore council FAQ · 2023','https://my.girlscouts.org/content/jerseyshoregirlscouts/en/cookies/cookie-sale-faqs.html'],
+ dcu:['Council Digital Cookie updates','https://gscookiesetc.org/cookies/digital-cookie-updates/'],
+ hh:['GS Heart of the Hudson FAQ · 2026','https://www.girlscoutshh.org/content/dam/girlscoutshh-redesign/documents/my26-cookie-season/Initial%20Order%20FAQ%202.25.2026.pdf'],
+ dki:['GS of Southern Illinois known issues · 2024','https://www.gsofsi.org/content/dam/gsofsi-redesign/documents/product-program-documents/cookieprogram/2024-cookie-documents/Digital%20Cookie%20FAQs%20and%20Known%20Issues.pdf'],
+ faq:['girlscouts.org Digital Cookie FAQ','https://www.girlscouts.org/en/cookies/how-to-buy-cookies/digital-cookie-faqs.html'],
+ fee:['Digital Cookie shipping fees · GSUSA 2025','https://www.gsccc.org/content/dam/gsccc-redesign/documents/cookies-product-sales/digital-cookie/Shipping-fees.pdf'],
+ mtn:['Money Talks News · 2026','https://www.moneytalksnews.com/girl-scouts-are-selling-dog-cookies-now-the-shipping-costs-more-than-the-troop-earns/'],
+ ap21:['AP via NBC News · Jun 2021','https://www.nbcnews.com/news/us-news/girl-scouts-have-millions-unsold-cookies-n1270792'],
+ shp:['girlscoutshop.com shipping info','https://www.girlscoutshop.com/shipping-info'],
+ ord:['girlscoutshop.com ordering info','https://www.girlscoutshop.com/ordering-info'],
+ prem:['GS council shipping fee sheet','https://www.gscm.org/content/dam/gscm-redesign/documents/Shipping%20fees.pdf'],
+ pp:['Quartz · Sep 2026','https://qz.com/girl-scouts-dog-cookie-allergy-friendly-2027-090926'],
+ wx:['WPRI · 2025','https://www.yahoo.com/news/where-buy-girl-scout-cookies-211710896.html']};
+const RISKS=[
+ {t:'An online-only cookie sold out in under a day',grp:'Launch',yr:'2023',f:4,i:5,
+  w:'Raspberry Rally, the first online-exclusive cookie, sold out within hours. Some customers were told their order had sold out before it was processed, and boxes resold on eBay for many times the price.',
+  fix:'Stock is reserved at checkout, so nobody pays for packages that aren\'t there. Household limits, a resale watch, and a launch-day surge plan sized to ship-site label capacity.',src:['rr1','rr2','rr3'],pg:'launch',st:'Built in beta'},
+ {t:'Baker production problems caused shortages',grp:'Cookies',yr:'2022–23',f:3,i:5,
+  w:'Production issues at the Louisville bakery led to shortages and delayed reorders. A year earlier, labor shortages hit Adventurefuls nationally.',
+  fix:'A live view of staged stock by baker and variety, with a one-switch shipped on/off per variety that updates open orders and customer messages together.',src:['lbb','npr'],pg:'stock',st:'Built in beta'},
+ {t:'Shipped orders paused or varieties pulled',grp:'Cookies',yr:'2022–23',f:3,i:4,
+  w:'In 2022 some councils couldn\'t offer shipped orders until Feb 27. In 2023 Samoas and Toffee-tastic were unavailable for online shipping in most Little Brownie councils.',
+  fix:'The variety switchboard shows how many open orders and how much demand each change affects before it goes live.',src:['sil','jsy'],pg:'stock',st:'Built in beta'},
+ {t:'Orders and transfers not syncing between systems',grp:'Cookies',yr:'2024–26',f:5,i:3,
+  w:'Councils have posted known issues: transfers not syncing between Digital Cookie and the baker platforms, donation orders not transferring, orders not showing, and syncs taking up to 24 hours.',
+  fix:'A sync monitor checks every order at each hand-off and lists anything stuck past its time limit before a family or council notices.',src:['dcu','hh','dki'],pg:'exc',st:'Built in beta'},
+ {t:'Peak-weekend volume slowed order processing',grp:'Cookies',yr:'Recent',f:3,i:3,
+  w:'Heavy volume over National Girl Scout Cookie Weekend delayed payment capture on some in-hand orders until GSUSA cleared the backlog.',
+  fix:'An hourly view of orders vs processing capacity for peak days, with alerts when the backlog grows faster than it clears.',src:['dcu'],pg:'launch',st:'Built in beta'},
+ {t:'A wide delivery promise of 2 to 15 business days',grp:'Cookies',yr:'Ongoing',f:5,i:3,
+  w:'GSUSA tells customers shipped orders take 2–15 business days (5–15 for premium destinations), and all sales are final.',
+  fix:'Every parcel is tracked against its own expected date. Late-risk orders surface early and the customer is told before they ask.',src:['faq'],pg:'exc',st:'Built in beta'},
+ {t:'"Where is my order?" falls on the customer',grp:'Cookies',yr:'Ongoing',f:5,i:2,
+  w:'To check status today, customers re-enter their name, order number and email on a lookup page.',
+  fix:'Proactive, branded shipping and delay notices, plus one tracking page across every carrier.',src:['faq'],pg:'exc',st:'Built in beta'},
+ {t:'Shipping fees draw public criticism',grp:'Cookies',yr:'2015–26',f:4,i:3,
+  w:'Shipping is a flat fee per tier of packages. Recent coverage compared the fee on a four-package order with what the troop earns.',
+  fix:'Tier-fit analysis shows where real orders sit against the tiers, to inform checkout nudges and messaging. This is product input, not a pricing claim.',src:['fee','mtn'],pg:'analysis',st:'Built in beta'},
+ {t:'Millions of boxes left over at season end',grp:'Cookies',yr:'2021',f:1,i:5,
+  w:'About 15 million boxes went unsold in 2021, most of them still at the bakers. Cookies have about a 12-month shelf life, and some councils questioned the forecasting.',
+  fix:'Lot and best-by tracking with oldest-first shipping, and a weekly sell-through forecast that flags surplus early for donation programs.',src:['ap21'],pg:'stock',st:'Built in beta'},
+ {t:'Shop backorders and split shipments',grp:'Shop',yr:'Ongoing',f:4,i:2,
+  w:'girlscoutshop.com can cancel backorders, and reviewers mention backorders bringing extra shipping charges. Orders placed when the DC is closed ship the next open day.',
+  fix:'Rules for each order, set by GSUSA: ship complete, split, or hold. The plan is shown at checkout and DC closures are planned in.',src:['ord','shp'],pg:'stock',st:'Built in beta'},
+ {t:'Premium destinations cost more and take longer',grp:'Cookies',yr:'Ongoing',f:3,i:2,
+  w:'Councils list a surcharge for Alaska, Hawaii, Puerto Rico, APO/FPO/DPO, Guam and the USVI. These orders get a longer promise.',
+  fix:'Lane rules route these orders to the right service (USPS for military addresses) and set the promise per lane.',src:['prem','faq'],pg:'exc',st:'Built in beta'},
+ {t:'Weather and carrier disruptions',grp:'Cookies',yr:'Every season',f:4,i:3,
+  w:'Winter-weather and carrier disruptions are a standard caveat on cookie delivery times.',
+  fix:'A weather watch maps parcels heading into storm areas and sends a heads-up before the delay shows up in tracking.',src:['wx'],pg:'exc',st:'Built in beta'},
+ {t:'State delivery fees on Shop orders',grp:'Shop',yr:'2023–',f:2,i:1,
+  w:'Colorado charges a $0.28 retail delivery fee on taxable deliveries, and girlscoutshop.com passes it on.',
+  fix:'The billing audit checks state fees line by line, so charges and refunds stay right as more states add fees.',src:['shp'],pg:'bill',st:'Phase 2'},
+ {t:'2027 brings two new online exclusives and partners',grp:'Launch',yr:'Jan 12, 2027',f:5,i:4,
+  w:'Patch Pals (made with BARK) and Sparkables (made with Partake) launch Jan 12 as online-only, direct-ship products. That likely means new ship-from sites.',
+  fix:'A co-packer onboarding checklist, label and tracking hookups, and one launch-day view across every site.',src:['pp'],pg:'launch',st:'Built in beta'}];
+const PGN=k=>(PAGES.find(p=>p[0]==k)||[k,k])[1];
+function srcLinks(a){return a.map(k=>`<a href="${SRC[k][1]}" target="_blank" rel="noopener" style="font-size:12px">${SRC[k][0]} ↗</a>`).join(' · ')}
+function drawRisks(f){
+ $('#risks').innerHTML=RISKS.map((r,i)=>({r,i})).filter(o=>!f||o.r.grp==f).map(({r,i})=>`<div class="card" style="display:flex;flex-direction:column;gap:8px">
+  <div class="row"><span style="width:28px;height:28px;border-radius:50%;background:${r.i>=5?'#EE3124':r.i>=4?'#AF0061':'#F5B800'};color:#fff;display:grid;place-items:center;font-weight:900;flex:none">${i+1}</span><h3 style="margin:0;flex:1">${r.t}</h3><span class="tag gray">${r.grp} · ${r.yr}</span></div>
+  <div style="font-size:13px;color:var(--ink2)"><b style="color:var(--mut);font-size:11px;letter-spacing:.6px">WHAT HAPPENED</b><br>${r.w}</div>
+  <div style="font-size:13px;border-left:3px solid var(--g);padding-left:10px"><b style="color:var(--g);font-size:11px;letter-spacing:.6px">HOW GSUSA BY TAZ HANDLES IT</b><br>${r.fix}</div>
+  <div class="row" style="margin-top:auto"><span style="flex:1">${srcLinks(r.src)}</span><span class="tag ${r.st=='Built in beta'?'g':'b'}">${r.st}</span><button class="btn ghost" style="padding:6px 10px" onclick="go('${r.pg}')">${PGN(r.pg)} →</button></div></div>`).join('');
+}
+drawRisks('');
+$('#riskf').onclick=e=>{const b=e.target.closest('button');if(!b)return;$('#riskf').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x==b));drawRisks(b.dataset.f)};
+(function(){
+ const W=640,H=330,L=60,B=40,T=14,Rt=16,cw=(W-L-Rt)/5,ch=(H-B-T)/5;
+ let s=`<svg viewBox="0 0 ${W} ${H}">`;
+ for(let x=0;x<5;x++)for(let y=0;y<5;y++){const sc=(x+1)*(y+1);const c=sc>=16?'rgba(238,49,36,.22)':sc>=9?'rgba(245,184,0,.16)':'rgba(0,180,81,.10)';s+=`<rect x="${L+x*cw+1}" y="${T+(4-y)*ch+1}" width="${cw-2}" height="${ch-2}" rx="6" fill="${c}"/>`}
+ s+=`<text x="${L+(W-L-Rt)/2}" y="${H-8}" font-size="12" text-anchor="middle" fill="#93A1A8">How often it has come up →</text>`;
+ s+=`<text transform="translate(16 ${T+(H-B-T)/2}) rotate(-90)" font-size="12" text-anchor="middle" fill="#93A1A8">Member impact →</text>`;
+ const used={};
+ RISKS.forEach((r,i)=>{const k=r.f+'-'+r.i;const n=used[k]=(used[k]||0)+1;const ox=((n-1)%3-1)*24,oy=Math.floor((n-1)/3)*22;
+  const cx=L+(r.f-.5)*cw+ox,cy=T+(5-r.i+.5)*ch+oy-(n>3?10:0);
+  s+=`<circle cx="${cx}" cy="${cy}" r="11" fill="${r.grp=='Launch'?'#AF0061':r.grp=='Shop'?'#00B451':'#F5B800'}" stroke="#0B0D0F" stroke-width="2"><title>${r.t}</title></circle><text x="${cx}" y="${cy+4}" font-size="11" font-weight="900" text-anchor="middle" fill="#0B0D0F">${i+1}</text>`});
+ $('#riskmx').innerHTML=s+'</svg><div class="legend" style="margin-top:6px"><span><i style="background:#F5B800"></i>Cookies</span><span><i style="background:#00B451"></i>Shop</span><span><i style="background:#AF0061"></i>2027 launch</span></div>';
+ const by={};RISKS.forEach(r=>{by[r.pg]=(by[r.pg]||0)+1});
+ $('#riskcov').innerHTML='<ul class="facts">'+Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<li><span><a href="#" onclick="go('${k}');return false">${PGN(k)}</a></span><b>${v} risk${v>1?'s':''} covered</b></li>`).join('')+`<li><span>Built in this beta</span><b>${RISKS.filter(r=>r.st=='Built in beta').length} of ${RISKS.length}</b></li></ul>`;
+})();
+
+// ---------- LAUNCH ----------
+(function(){const d=Math.ceil((new Date(2027,0,12)-new Date(new Date().toDateString()))/864e5);$('#lcount').textContent=d>0?d:'Live'})();
+$('#lkpis').innerHTML=[['Products','2 new','Patch Pals · Sparkables','#AF0061'],['Channel','Online only','Direct ship · no booths','#D5F267'],['Launch-week orders','~48K','Mid case · estimate','#F5B800'],['Ship-from sites','To confirm','BARK · Partake partners','#1496D4']].map(([l,v,s,c])=>`<div class="card kpi"><div class="bar" style="background:${c}"></div><div class="lab">${l}</div><div class="val">${v}</div><div class="s">${s}</div></div>`).join('');
+function surge(){
+ const lw=+$('#s_lw').value,d1=+$('#s_d1').value/100,cap=+$('#s_cap').value,hr=+$('#s_hr').value;
+ $('#v_lw').textContent=fmt(lw);$('#v_d1').textContent=Math.round(d1*100)+'%';$('#v_cap').textContent=fmt(cap);$('#v_hr').textContent=hr;
+ // daily split: day1 = d1, rest decays over 6 days
+ const rest=1-d1,wts=[.32,.22,.16,.12,.10,.08],days=[d1,...wts.map(w=>w*rest)].map(x=>x*lw);
+ // hourly arrival within each day (24h, evening-heavy profile)
+ const prof=[.5,.3,.2,.2,.2,.4,.9,1.6,2.4,3,3.6,4,4.6,4.8,4.6,4.4,4.6,5.2,6,6.6,6.2,5,3.4,1.6];const ps=prof.reduce((a,b)=>a+b,0);
+ const arr=[];days.forEach(d=>prof.forEach(p=>arr.push(d*p/ps)));
+ // labels: ship sites run hr hours/day starting 6am
+ let bl=0,peak=0,peakAt=0,clear=null;const out=[],blg=[];const shipped=[];let cum=0,cumS=0;const within24=[];
+ arr.forEach((a,h)=>{const hod=h%24,open=hod>=6&&hod<6+hr;bl+=a;const c=open?Math.min(bl,cap):0;bl-=c;out.push(c);blg.push(bl);if(bl>peak){peak=bl;peakAt=h}if(clear===null&&h>24&&bl<1)clear=h;});
+ const N=arr.length,W=720,H=330,L=50,B=26,T=10,mx=Math.max(...arr,...blg,cap)*1.08,bw=(W-L-8)/N;
+ const y=v=>H-B-(v/mx)*(H-B-T);
+ let s=`<svg viewBox="0 0 ${W} ${H}">`;
+ for(let i=0;i<=4;i++){const v=mx*i/4;s+=`<line x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="#232A2E"/><text x="${L-6}" y="${y(v)+4}" font-size="10.5" text-anchor="end" fill="#7A8780">${v>=1000?(v/1000).toFixed(v>=10000?0:1)+'K':Math.round(v)}</text>`}
+ s+=`<path d="M${L},${y(0)} ${blg.map((v,i)=>`L${L+i*bw},${y(v)}`).join(' ')} L${L+N*bw},${y(0)}Z" fill="rgba(245,184,0,.22)" stroke="#F5B800" stroke-width="1.2"/>`;
+ arr.forEach((v,i)=>{s+=`<rect x="${L+i*bw}" y="${y(v)}" width="${Math.max(bw-.6,.6)}" height="${y(0)-y(v)}" fill="#FF7BC0" opacity=".85"/>`});
+ s+=`<path d="${out.map((v,i)=>`${i?'L':'M'}${L+i*bw},${y(v)}`).join(' ')}" fill="none" stroke="#D5F267" stroke-width="1.6"/>`;
+ ['Tue Jan 12','Wed','Thu','Fri','Sat','Sun','Mon'].forEach((d,i)=>s+=`<text x="${L+i*24*bw+4}" y="${H-8}" font-size="11" fill="#AEB7B2">${d}</text><line x1="${L+i*24*bw}" x2="${L+i*24*bw}" y1="${T}" y2="${H-B}" stroke="#2A3236"/>`);
+ $('#surge').innerHTML=s+'</svg>';
+ const dayCap=cap*hr;
+ $('#surgeout').innerHTML=[['Day-1 orders',fmt(Math.round(days[0]))],['Labels per day at this capacity',fmt(dayCap)],['Biggest backlog',fmt(Math.round(peak))+' orders · '+['Tue','Wed','Thu','Fri','Sat','Sun','Mon'][Math.floor(peakAt/24)]+' '+(peakAt%24)+':00'],['Backlog cleared',clear===null?'<span style="color:#FF7A6B">Not within the week</span>':['Tue','Wed','Thu','Fri','Sat','Sun','Mon'][Math.floor(clear/24)]+' '+(clear%24)+':00'],['Capacity needed to clear day 1 same day',fmt(Math.ceil(days[0]/hr/100)*100)+' / hr']].map(([a,b])=>`<li><span>${a}</span><b>${b}</b></li>`).join('');
+}
+['s_lw','s_d1','s_cap','s_hr'].forEach(id=>$('#'+id).addEventListener('input',surge));surge();
+function ogBox(el,rows){el.innerHTML='<ul class="facts">'+rows.map(([a,b,c])=>`<li><span>${a}</span><b style="${c?'color:'+c:''}">${b}</b></li>`).join('')+'</ul>'}
+function ogRun(){
+ const stock=+$('#og_stock').value,n=+$('#og_orders').value,r=rng(stock+n);
+ const sizes=[];for(let i=0;i<n;i++){const x=r();sizes.push(x<.46?4:x<.70?6:x<.86?8:x<.95?12:24)}
+ const demand=sizes.reduce((a,b)=>a+b,0);
+ // A: all accepted & paid; filled in processing order (random), the rest cancelled
+ let left=stock,filledA=0,cancelA=0,cancelPk=0;sizes.slice().sort(()=>r()-.5).forEach(s=>{if(left>=s){left-=s;filledA++}else{cancelA++;cancelPk+=s}});
+ // B: reserve at checkout in arrival order; once a size can't be met, partial customers see sold out
+ let lb=stock,filledB=0,turned=0;sizes.forEach(s=>{if(lb>=s){lb-=s;filledB++}else turned++});
+ ogBox($('#og_a'),[['Orders taken and charged',fmt(n)],['Packages ordered',fmt(demand)],['Orders shipped',fmt(filledA)],['Paid, then cancelled',fmt(cancelA),cancelA?'#FF7A6B':''],['Refunds to process',fmt(cancelA),cancelA?'#FF7A6B':''],['Customer emails: "sold out after you paid"',fmt(cancelA),cancelA?'#FF7A6B':'']]);
+ ogBox($('#og_b'),[['Orders placed',fmt(filledB)],['Packages reserved',fmt(stock-lb)],['Orders shipped',fmt(filledB)],['Paid, then cancelled','0','#3DDC84'],['Shoppers who saw "sold out" before paying',fmt(turned)],['Waitlist sign-ups (offered)',fmt(Math.round(turned*.4))]]);
+}
+$('#og_run').onclick=ogRun;ogRun();
+(function(){
+ const RULES=[['Same address, 3+ orders',true],['24+ packages of an exclusive',true],['Freight-forwarder address',true],['New account, overnight shipping',false]];
+ $('#rwrules').innerHTML=RULES.map(([t,on],i)=>`<label class="tag ${on?'g':'gray'}" style="cursor:pointer;padding:5px 9px;display:inline-flex;align-items:center;width:auto;flex:none"><input type="checkbox" ${on?'checked':''} data-i="${i}" style="vertical-align:-2px;margin-right:5px">${t}</label>`).join('');
+ const sts=['TX','FL','CA','NY','GA','NJ','OH','DE','OR'];
+ const rows=[];for(let i=0;i<9;i++){const sig=i%4;rows.push({o:'DC-'+(1048800+Math.floor(RZ()*900)),sig,pk:sig==1?24+Math.floor(RZ()*4)*12:sig==0?8+Math.floor(RZ()*3)*4:12,st:sig==2?'DE · forwarder':'ZIP '+ZIP3[sts[i]]+'xx'})}
+ const SIGT=['3rd order to same address today','Bulk quantity of Patch Pals','Freight-forwarder address','New account · overnight'];
+ function draw(){const on=[...$('#rwrules').querySelectorAll('input')].map(x=>x.checked);
+  $('#rw').innerHTML=rows.filter(r=>on[r.sig]).map(r=>`<tr><td>${r.o}</td><td>${SIGT[r.sig]}</td><td class="right num">${r.pk}</td><td>${r.st}</td><td><button class="btn ghost rwb" style="padding:4px 9px;font-size:12px">Hold</button> <button class="btn ghost rwb" style="padding:4px 9px;font-size:12px">Release</button></td></tr>`).join('')||'<tr><td colspan="5" class="hint">No rules on.</td></tr>';}
+ $('#rwrules').onchange=e=>{e.target.closest('label').className='tag '+(e.target.checked?'g':'gray');draw()};
+ $('#rw').onclick=e=>{const b=e.target.closest('.rwb');if(!b)return;b.closest('td').innerHTML=`<span class="tag ${b.textContent=='Hold'?'red':'g'}">${b.textContent=='Hold'?'Held for review':'Released to ship'}</span>`};
+ draw();
+ const CP=[['Patch Pals','with BARK',['Ship-from site and daily cutoff','Carrier accounts and services','Label hookup (API, EDI or file)','Box sizes and weights for every pack','Ship confirmation and tracking to TAZ','Test order end to end']],['Sparkables','with Partake',['Ship-from site and daily cutoff','Allergen-safe handling and packing spec','Label hookup (API, EDI or file)','Box sizes and weights for every pack','Ship confirmation and tracking to TAZ','Test order end to end']]];
+ $('#copack').innerHTML=CP.map(([n,w,items])=>`<div style="margin-bottom:12px"><div class="row"><b>${n}</b><span class="hint" style="margin:0">${w}</span><span class="sp"></span><span class="tag">0 of ${items.length}</span></div>${items.map(t=>`<div class="row" style="font-size:13px;padding:5px 0;border-bottom:1px solid #1E2327"><span style="width:14px;height:14px;border-radius:4px;border:2px solid #46544C;flex:none"></span><span style="flex:1">${t}</span><span class="hint" style="margin:0">To confirm</span></div>`).join('')}</div>`).join('');
+ $('#runbook').innerHTML=[['T-30 · Dec 13','Co-packer checklists complete; test orders shipped from every site','HTL + GSUSA + partners'],['T-21 · Dec 22','Launch stock counted at each site; checkout reservation turned on','GSUSA eCommerce + TAZ'],['T-14 · Dec 29','Surge plan signed off: label capacity per site, carrier pickups added','Efficient + carriers'],['T-7 · Jan 5','Resale rules and household limits set; customer notices approved','GSUSA'],['T-1 · Jan 11','Final stock sync; war-room channel open; alerts tested','All'],['T-0 · Jan 12','Launch. Hourly view of orders vs labels; sold-out switch live','All','now'],['T+1 to T+3','Backlog cleared; late-risk notices sent; resale holds reviewed','GSUSA ops + HTL','pend'],['T+14 · Jan 26','Launch review: on-time rate, sell-through, member feedback','HTL + GSUSA','pend']].map(([w,a,b,c])=>`<li class="${c||''}"><span class="dot"></span><div class="when">${w}</div><div class="what">${a}</div><div class="where">${b}</div></li>`).join('');
+})();
+
+// ---------- EXCEPTIONS ----------
+const EXT=[['Past expected date','Carrier','#FF7A6B'],['No first scan 48h+','Sync','#F5B800'],['Label not created 24h+','Sync','#F5B800'],['Damage reported','Claim','#AF0061'],['Address issue','Carrier','#1496D4'],['Weather watch','Weather','#00B2BE'],['Premium destination','Lane','#D5F267']];
+const PREM=['AK','HI','PR'];
+const EXR=[];let EXN=15;
+(function(){
+ const base=SH.filter(r=>!r.real);
+ base.forEach(r=>{const x=RZ();let t=null;
+  if(PREM.includes(r.st)&&x<.6)t=6;else if(['TX','OK','AR','TN','KY','MO','MS','LA'].includes(r.st)&&x<.025)t=5;
+  else if(x<.012)t=0;else if(x<.018)t=1;else if(x<.022)t=2;else if(x<.026)t=3;else if(x<.029)t=4;
+  if(t===null)return;
+  const age=t==0?16+Math.floor(RZ()*6):t==2?1+Math.floor(RZ()*2):t==1?2+Math.floor(RZ()*3):1+Math.floor(RZ()*9);
+  const prom=r.prog.startsWith('Cookies')?'2–15 bus. days':'10–15 bus. days';
+  const step=['Send delay notice','Confirm pickup','Re-send to baker','File claim','Confirm address','Send heads-up','Set lane promise'][t];
+  EXR.push({t,r,age,prom,step})});
+ EXT.forEach(([n])=>$('#exf').insertAdjacentHTML('beforeend',`<option value="${n}">${n}</option>`));
+ Object.keys(ORIG).forEach(p=>$('#exp').insertAdjacentHTML('beforeend',`<option>${p}</option>`));
+ const c=i=>EXR.filter(e=>e.t==i).length;
+ $('#exkpis').innerHTML=[['Open exceptions',fmt(EXR.length),'sample · across all programs','#FF7A6B'],['Past expected date',fmt(c(0)),'customer told before they ask','#FF7A6B'],['Stuck between systems',fmt(c(1)+c(2)),'label or scan missing past limit','#F5B800'],['Damage & address',fmt(c(3)+c(4)),'claims and fixes in progress','#AF0061']].map(([l,v,s,col])=>`<div class="card kpi"><div class="bar" style="background:${col}"></div><div class="lab">${l} <span class="tag">Sample</span></div><div class="val num">${v}</div><div class="s">${s}</div></div>`).join('');
+ function drawQ(){const f=$('#exf').value,p=$('#exp').value;const rows=EXR.filter(e=>(!f||EXT[e.t][0]==f)&&(!p||e.r.prog==p)).sort((a,b)=>b.age-a.age);
+  $('#exq').innerHTML=rows.slice(0,EXN).map(e=>`<tr><td><span class="st" style="color:${EXT[e.t][2]}">${EXT[e.t][0]}</span></td><td class="num">${e.r.ord||e.r.id}</td><td>${e.r.prog}</td><td>${e.r.car}</td><td>${e.r.city?e.r.city+', ':''}${e.r.st}</td><td class="right num">${e.t==0?`<span style="color:#FF7A6B">${e.age} bus. days</span>`:e.age+'d'}</td><td>${e.prom}</td><td><button class="btn ghost exb" data-t="${e.t}" style="padding:4px 9px;font-size:12px">${e.step}</button></td></tr>`).join('');
+  $('#exinfo').innerHTML=`Showing ${Math.min(EXN,rows.length)} of ${fmt(rows.length)} `+(rows.length>EXN?'<button class="btn ghost" style="padding:5px 10px" onclick="EXN+=15;$(\'#exf\').onchange()">Show more</button>':'')}
+ $('#exf').onchange=drawQ;$('#exp').onchange=drawQ;drawQ();
+ $('#exq').onclick=e=>{const b=e.target.closest('.exb');if(!b)return;const t=+b.dataset.t;b.outerHTML=`<span class="tag g">Done · ${t==3?'claim filed':t==4?'customer asked':'notice sent'}</span>`};
+ // pipeline
+ const P=[['Order placed','Storefront',100000,0],['Payment captured','Payments',99620,380],['Sent to baker / DC','Order hand-off',99410,210],['Label created','Ship site',99180,230],['First carrier scan','Carrier',98760,420],['Delivered','Carrier',97900,0]];
+ $('#pipe').innerHTML=P.map(([n,s,v,st],i)=>`<div style="display:grid;grid-template-columns:170px 1fr 110px;gap:10px;align-items:center;padding:6px 0"><div><b style="font-size:13px">${n}</b><div class="hint" style="margin:0">${s}</div></div><div class="bar2"><i style="width:${v/1000}%;background:${i==5?'#3DDC84':'#00B451'}"></i></div><div class="right" style="font-size:12.5px">${fmt(v)}${st?`<br><span style="color:#F5C842">${fmt(st)} stuck</span>`:''}</div></div>`).join('')+'<div class="hint" style="margin:8px 0 0">Per 100,000 orders · sample limits: payment 2h, hand-off 4h, label 24h, first scan 48h.</div>';
+ // weather map
+ const WX=['TX','OK','AR','TN','KY','MO','MS','LA','AL'];const cx=WX.map(a=>MAP.states[a].c[0]),cy=WX.map(a=>MAP.states[a].c[1]);const x0=Math.min(...cx)-150,y0=Math.min(...cy)-110,x1=Math.max(...cx)+120,y1=Math.max(...cy)+90;let s=`<svg viewBox="${x0} ${y0} ${x1-x0} ${y1-y0}">`;
+ for(const [ab,o] of Object.entries(MAP.states)){const hit=WX.includes(ab);s+=`<path d="${o.d}" fill="${hit?'rgba(0,178,190,.55)':'#1A1F23'}" stroke="#0B0D0F" stroke-width=".8"><title>${o.name}</title></path>`}
+ s+=`<path d="${MAP.nation}" fill="none" stroke="#3A4A42" stroke-width=".8"/>`;
+ WX.forEach(ab=>{const [x,y]=MAP.states[ab].c;s+=`<text x="${x}" y="${y+4}" font-size="13" font-weight="800" text-anchor="middle" fill="#E8ECEA" stroke="#0B0D0F" stroke-width="3" paint-order="stroke">${ab}</text>`});
+ $('#wxmap').innerHTML=s+'</svg>';
+ const inA=SH.filter(r=>!r.real&&WX.includes(r.st)).length;
+ $('#wxsum').innerHTML=`<b>${fmt(inA)}</b> sample parcels bound for the shaded states · heads-up queued for each · <a href="#" onclick="$('#exf').value='Weather watch';$('#exf').onchange();return false">see in queue</a>`;
+})();
+const NT={'Shipped':['Your Girl Scout Cookies are on the way!','Good news! {N} packages from Troop {T} left the bakery today with {C}. Expected delivery: <b>{D}</b>. Track any time at the link below.'],
+ 'Running late':['A quick update on your cookies','Your order is taking a little longer than planned. {C} now expects delivery by <b>{D}</b>. We\'re keeping an eye on it and will update you again if anything changes.'],
+ 'Weather heads-up':['Winter weather near you','A winter storm is slowing deliveries in your area. Your cookies are safe in transit with {C}. New expected date: <b>{D}</b>.'],
+ 'Variety unavailable':['A change to your order','One variety in your order is temporarily unavailable to ship. Choose a swap, or we\'ll send the rest now and refund that variety. Nothing else changes.'],
+ 'Damage follow-up':['We\'re sorry, and we\'re fixing it','Thanks for the photo. A replacement for {N} packages ships today, and you don\'t need to send anything back.']};
+Object.keys(NT).forEach(k=>$('#ntpl').insertAdjacentHTML('beforeend',`<option>${k}</option>`));
+function drawNotice(){const [sub,body]=NT[$('#ntpl').value];const D=sd(addD(TODAY,4));
+ $('#notice').innerHTML=`<div style="border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;color:#16211B"><div style="background:#00B451;color:#fff;padding:12px 16px;font-weight:900">Girl Scouts <span style="font-weight:400;opacity:.9">· Cookie order update</span></div><div style="padding:16px"><div style="font-size:12px;color:#7A8780">Subject</div><div style="font-weight:800;margin-bottom:10px">${sub}</div><div style="font-size:14px;line-height:1.55">${body.replace('{N}','8').replace('{T}','2214').replace('{C}','UPS').replace('{D}',D)}</div><div style="margin-top:14px"><span style="display:inline-block;background:#005640;color:#fff;border-radius:8px;padding:9px 14px;font-weight:700">Track my cookies</span></div><div style="font-size:11.5px;color:#7A8780;margin-top:12px">Sent on behalf of your Girl Scout council · reply goes to customer care</div></div></div>`}
+$('#ntpl').onchange=drawNotice;drawNotice();
+$('#dm_p').onchange=e=>{const f=e.target.files[0];if(!f)return;const u=URL.createObjectURL(f);$('#dm_prev').innerHTML=`<img src="${u}" style="max-width:100%;max-height:140px;border-radius:8px;margin-bottom:10px">`};
+$('#dm_go').onclick=()=>{const o=$('#dm_o').value.trim()||'DC-1048821';$('#dm_out').innerHTML=`<div class="q"><b>Claim CLM-${(Date.now()%100000).toString().padStart(5,'0')} filed for ${o}</b><span>${$('#dm_t').value} · ${$('#dm_n').value} packages · replacement queued at the nearest site · carrier claim opened · council notified. (Demo: nothing is sent.)</span></div>`};
+
+// ---------- STOCK: variety switchboard, lots, backorders ----------
+const VOFF={};let VB='LBB';
+function drawVS(){
+ const vs=CV[VB];const r=rng(VB=='LBB'?11:22);
+ $('#vsw').innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Variety</th><th class="right">Staged (pkgs)</th><th class="right">Weekly shipped demand</th><th class="right">Weeks of cover</th><th class="right">Open orders with it</th><th>Shipped</th></tr></thead><tbody style="cursor:default">${vs.map((v,i)=>{const ckr=CK.find(x=>x.k==VB&&x.v==v);const st=ckr?ckr.cs*12:12000;const wk=Math.round(st/(3+r()*6)/12)*12;const cov=st/wk;const op=Math.round(wk*.18);const k=VB+v,off=VOFF[k];
+  return `<tr><td><b>${v}</b></td><td class="right num">${fmt(st)}</td><td class="right num">${fmt(wk)}</td><td class="right num" style="color:${cov<4?'#FF7A6B':cov<6?'#F5C842':'inherit'}">${cov.toFixed(1)}</td><td class="right num">${fmt(op)}</td><td><button class="btn ${off?'ghost':''} vsbtn" data-k="${k}" data-v="${v}" data-op="${op}" style="padding:4px 12px;font-size:12px;min-width:64px">${off?'Off':'On'}</button></td></tr>`}).join('')}</tbody></table></div>`;
+ const offs=Object.keys(VOFF).filter(k=>VOFF[k]&&k.startsWith(VB));
+ $('#vswmsg').innerHTML=offs.length?`<div class="q" style="border-color:#F5B800"><b>${offs.length} variet${offs.length>1?'ies':'y'} switched off for shipping at ${VB=='LBB'?'Little Brownie':'ABC'} councils</b><span>Storefront hides ${offs.map(k=>k.slice(3)).join(', ')} for shipped orders · ${fmt(offs.reduce((a,k)=>a+(VOFF[k]||0),0))} open orders get the "Variety unavailable" notice with a swap · girl-delivery and booths are not affected.</span></div>`:'<p class="hint" style="margin:0">All varieties shipping. Switch one off to see what changes.</p>';
+}
+$('#vsb').onclick=e=>{const b=e.target.closest('button');if(!b)return;VB=b.dataset.b;$('#vsb').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x==b));drawVS()};
+$('#vsw').onclick=e=>{const b=e.target.closest('.vsbtn');if(!b)return;const k=b.dataset.k;VOFF[k]=VOFF[k]?0:+b.dataset.op;drawVS()};
+drawVS();
+(function(){
+ const L=[];const r=rng(33);[['LBB','Thin Mints'],['LBB','Samoas'],['LBB','Exploremores'],['ABC','Thin Mints'],['ABC','Caramel deLites'],['ABC','Lemonades'],['LBB','Trefoils']].forEach(([b,v],i)=>{const bk=new Date(2026,9+Math.floor(i/3),3+Math.floor(r()*24));L.push({lot:b+'-'+(2610+i)+String.fromCharCode(65+i),v,bk,bb:addD(bk,365),pk:Math.round((8+r()*30)*1000/12)*12})});
+ L.sort((a,b)=>a.bk-b.bk);
+ $('#lots').innerHTML=L.map((x,i)=>`<tr><td class="num">${x.lot}</td><td>${x.v}</td><td>${sdy(x.bk)}</td><td>${sdy(x.bb)}</td><td class="right num">${fmt(x.pk)}</td><td>${i<2?'<span class="tag g">Next out</span>':'<span class="tag gray">Queued</span>'}</td></tr>`).join('');
+ // sell-through: staged vs cumulative projected sales Jan–Apr (weekly)
+ const wk=16,st=1.0,proj=[],hi=[],lo=[];let c=0;const curve=[.13,.11,.09,.09,.08,.08,.07,.07,.06,.05,.04,.04,.03,.02,.02,.02];
+ curve.forEach((p,i)=>{c+=p;proj.push(c*.94);hi.push(Math.min(c*1.04,1.1));lo.push(c*.84)});
+ const W=900,H=200,Lx=36,B=24,T=10,y=v=>H-B-(v/1.1)*(H-B-T),x=i=>Lx+i*(W-Lx-10)/(wk-1);
+ let s=`<svg viewBox="0 0 ${W} ${H}"><line x1="${Lx}" x2="${W}" y1="${y(1)}" y2="${y(1)}" stroke="#D5F267" stroke-dasharray="5 4"/><text x="${W-4}" y="${y(1)-5}" font-size="10.5" text-anchor="end" fill="#D5F267">Staged stock</text>`;
+ s+=`<path d="M${hi.map((v,i)=>`${x(i)},${y(v)}`).join(' L')} L${lo.map((v,i)=>`${x(i)},${y(v)}`).reverse().join(' L')}Z" fill="rgba(0,180,81,.18)"/>`;
+ s+=`<path d="M${proj.map((v,i)=>`${x(i)},${y(v)}`).join(' L')}" fill="none" stroke="#00B451" stroke-width="2.2"/>`;
+ ['Jan 12','Feb','Mar','Apr'].forEach((m,i)=>s+=`<text x="${x(Math.min(i*5,wk-1))}" y="${H-6}" font-size="10.5" text-anchor="${i==3?'end':'start'}" fill="#AEB7B2">${m}</text>`);
+ s+=`<text x="${x(wk-1)}" y="${y(proj[wk-1])+40}" font-size="11" text-anchor="end" fill="#F5C842">Forecast surplus ~${Math.round((1-proj[wk-1])*100)}% → plan donations by Mar 1</text></svg>`;
+ $('#sellthru').innerHTML=s;
+ const BO=[['SO-1458821','Daisy vest + 3 petals','Petals back Nov 14','Hold · ship complete','2 boxes → 1'],['SO-1458907','Brownie sash, badge set','Badge set back Nov 20','Split · sash now','Member chose split'],['SO-1459012','Uniform, pins, journal','Journal back Dec 2','Hold 5 days then split','Rule: max 5-day hold'],['SO-1459150','Troop camp kit (6 items)','1 item discontinued','Ship now · offer swap','Swap offered']];
+ $('#bo').innerHTML='<div class="tbl-wrap"><table><thead><tr><th>Order</th><th>Items</th><th>Backorder</th><th>Plan</th><th>Result</th></tr></thead><tbody style="cursor:default">'+BO.map(r=>`<tr>${r.map((c,i)=>`<td${i==0?' class="num"':''}>${i==3?`<span class="tag b">${c}</span>`:c}</td>`).join('')}</tr>`).join('')+'</tbody></table></div><ul class="facts" style="margin-top:10px"><li><span>Rule · default</span><b>Hold up to 5 days for a complete box</b></li><li><span>Rule · uniforms before events</span><b>Split so the member has it in time</b></li><li><span>DC closures</span><b>Holidays and weather days built into promises</b></li></ul>';
+})();
+
+// ---------- ANALYSIS: tier fit ----------
+(function(){
+ const ck=SH.filter(r=>r.pk&&!r.real);const h=new Array(25).fill(0);ck.forEach(r=>h[Math.min(24,Math.max(1,r.pk))]++);
+ const tierOf=n=>n<4?'min':n<=8?'A':n<=12?'B':n<=20?'B+A':'B+B';
+ const W=700,H=230,L=40,B=34,T=10,mx=Math.max(...h)*1.1,bw=(W-L-10)/24,y=v=>H-B-(v/mx)*(H-B-T);
+ let s=`<svg viewBox="0 0 ${W} ${H}">`;
+ [[4,8,'4–8 · tier A'],[9,12,'9–12 · tier B'],[13,20,'13–20 · B + A'],[21,24,'21–24 · B + B']].forEach(([a,b,t],i)=>{s+=`<rect x="${L+(a-1)*bw}" y="${T}" width="${(b-a+1)*bw}" height="${H-B-T}" fill="${i%2?'rgba(255,255,255,.03)':'rgba(0,180,81,.06)'}"/><text x="${L+((a+b)/2-.5)*bw}" y="${T+12}" font-size="10.5" text-anchor="middle" fill="#93A1A8">${t}</text>`});
+ for(let n=1;n<=24;n++){const v=h[n];if(!v)continue;const edge=n==9||n==13||n==21;s+=`<rect x="${L+(n-1)*bw+2}" y="${y(v)}" width="${bw-4}" height="${y(0)-y(v)}" rx="2" fill="${n<4?'#46544C':edge?'#FF7BC0':'#00B451'}"><title>${n} packages: ${v} orders</title></rect>`}
+ for(let n=1;n<=24;n+=1)if(n%2==0||n==1)s+=`<text x="${L+(n-.5)*bw}" y="${H-B+14}" font-size="10" text-anchor="middle" fill="#AEB7B2">${n}</text>`;
+ s+=`<text x="${L+12*bw}" y="${H-4}" font-size="11" text-anchor="middle" fill="#93A1A8">Packages per order</text></svg>`;
+ $('#tiers').innerHTML=s;
+ const tot=ck.length||1,share=f=>Math.round(ck.filter(f).length/tot*100)+'%';
+ $('#tierfacts').innerHTML=[['Sample cookie orders',fmt(ck.length)],['At the 4-package minimum',share(r=>r.pk==4)],['In tier A (4–8)',share(r=>r.pk>=4&&r.pk<=8)],['One package into a new tier (9, 13, 21)',share(r=>[9,13,21].includes(r.pk))],['Fee table','<a href="'+SRC.fee[1]+'" target="_blank" rel="noopener">GSUSA 2025 ↗</a>']].map(([a,b])=>`<li><span>${a}</span><b>${b}</b></li>`).join('');
+})();
+
 </script>
 </body>
 </html>
