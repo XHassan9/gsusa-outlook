@@ -760,7 +760,7 @@ textarea.oin{resize:vertical}
       <p class="sub">Beta, estimate only. Bids are closed and this is not a bid. We have not seen your contract rates, so slide to wherever you think your current rate sits and see what the rate card below could mean for you. Move it as much as you like.</p>
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px"><b>Your current rate is <span id="sm-p" style="color:var(--lime)">40%</span> below our mock</b><span class="mute" style="font-size:12px">0% = mock rates, 70% = very aggressive</span></div>
       <input id="sm-sl" class="sl" type="range" min="0" max="70" value="40" step="1">
-      <div><button class="btn" id="sm-sweep" style="margin-top:12px">▶ Watch savings grow</button></div>
+      <div id="sm-tiers" style="margin:10px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div><div><button class="btn" id="sm-sweep" style="margin-top:12px">▶ Watch savings grow</button></div>
       <div class="num">
         <label>Cookie parcels per year<input id="sm-vc" type="number" value="1800000"></label>
         <label>Merch parcels under 1 lb per year<input id="sm-vm" type="number" value="255500"></label>
@@ -1706,6 +1706,10 @@ function upd(){var p=+$('#sm-sl').value,vc=+$('#sm-vc').value||0,vm=+$('#sm-vm')
  curve(p,vc,vm);zone(p);
  $('#sm-rows').innerHTML=R.map(function(r){var e=r[3]*(1-p/100),s=Math.max(0,e-r[4]);return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+d2(e)+'</td><td>'+d2(r[4])+'</td><td style="color:'+(s>0?'#c9f26b':'#93a99b')+'">'+(s>0?d2(s):'stays put')+'</td></tr>'}).join('')}
 
+
+function tierChips(box,sl,vcI,vmI,go){var vc=+vcI.value||0,vm=+vmI.value||0,cur=+sl.value;
+ box.innerHTML='<span class="sub" style="margin-right:6px">Jump to the deck tiers</span>'+[30,40,50].map(function(p){var t=tot(D.pts[p],vc,vm);return '<button class="btn o tier'+(cur===p?' on':'')+'" data-p="'+p+'">'+p+'% below &middot; '+(t>=1e6?'$'+(t/1e6).toFixed(1)+'M':m(t))+'</button>'}).join(' ');
+ box.querySelectorAll('.tier').forEach(function(b){b.onclick=function(){sl.value=b.dataset.p;go()}})}
 var YR={p:12,raf:null},MON=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],SHR=[0,0,.25,.45,.30,0,0,0,0,0,0,0];
 function yrDraw(sl,vcI,vmI,svg,totEl){var p=+sl.value,vc=+vcI.value||0,vm=+vmI.value||0,pt=D.pts[p],W=560,H=270,l=50,b=30,t=18,r=14,n=12,gw=(W-l-r)/n;
  var mo=MON.map(function(_,i){return {c:pt.cs*vc*SHR[i],m:pt.ms*vm/12}}),cum=[],c=0;mo.forEach(function(o,i){c+=o.c+o.m;cum.push(c)});var mx=Math.max(cum[11],1);mx=Math.ceil(mx/2e6)*2e6||2e6;
@@ -1733,7 +1737,7 @@ function yrDraw(sl,vcI,vmI,svg,totEl){var p=+sl.value,vc=+vcI.value||0,vm=+vmI.v
 function yrPlay(btn,redraw){if(YR.raf){cancelAnimationFrame(YR.raf);YR.raf=null;btn.textContent='▶ Play the year';YR.p=12;redraw();return}var t0=null;btn.textContent='■ Stop';
  function st(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/12000);YR.p=12*k;redraw();if(k<1)YR.raf=requestAnimationFrame(st);else{YR.raf=null;btn.textContent='↻ Play again'}}YR.raf=requestAnimationFrame(st)}
 
-var yrRe=function(){yrDraw($('#sm-sl'),$('#sm-vc'),$('#sm-vm'),$('#sm-yrsvg'),$('#sm-yrtot'));$('#sm-tot').textContent=$('#sm-yrtot').textContent};var _u=upd;upd=function(){_u();yrRe();var p=+$('#sm-sl').value,vc=+$('#sm-vc').value||0,vm=+$('#sm-vm').value||0,pt=D.pts[p];var fmE=document.getElementById('fm');if(fmE)fmE.innerHTML='Per parcel saved <b>'+d2(pt.cs)+'</b> cookie &times; '+vc.toLocaleString()+' + <b>'+d2(pt.ms)+'</b> merch &times; '+vm.toLocaleString()+' = <b>'+m(tot(pt,vc,vm))+'</b> a year';};
+var yrRe=function(){yrDraw($('#sm-sl'),$('#sm-vc'),$('#sm-vm'),$('#sm-yrsvg'),$('#sm-yrtot'));$('#sm-tot').textContent=$('#sm-yrtot').textContent;tierChips($('#sm-tiers'),$('#sm-sl'),$('#sm-vc'),$('#sm-vm'),function(){upd()})};var _u=upd;upd=function(){_u();yrRe();var p=+$('#sm-sl').value,vc=+$('#sm-vc').value||0,vm=+$('#sm-vm').value||0,pt=D.pts[p];var fmE=document.getElementById('fm');if(fmE)fmE.innerHTML='Per parcel saved <b>'+d2(pt.cs)+'</b> cookie &times; '+vc.toLocaleString()+' + <b>'+d2(pt.ms)+'</b> merch &times; '+vm.toLocaleString()+' = <b>'+m(tot(pt,vc,vm))+'</b> a year';};
 $('#sm-yrplay').onclick=function(){yrPlay(this,yrRe)};
 ['#sm-sl','#sm-vc','#sm-vm'].forEach(function(s){$(s).addEventListener('input',function(){upd()})});$('#sm-sweep').onclick=function(){$('#sm-yrplay').click()};$('#sm-sl').addEventListener('input',function(){sweepStop($('#sm-sweep'))});upd()})();
 </script></body>

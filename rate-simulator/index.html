@@ -47,7 +47,7 @@ table.t{width:100%;border-collapse:collapse;font-size:13px}table.t th{text-align
 
 <div class="card"><h3>Where does your current rate sit?</h3>
 <div style="display:flex;justify-content:space-between;align-items:baseline"><b>Your current rate is <span id="p" style="color:var(--lime)">40%</span> below our mock</b><span class="sub">0% = mock rates · 70% = very aggressive</span></div>
-<input id="sl" type="range" min="0" max="70" value="40"><div style="margin:4px 0 2px"><button class="btn" id="sweep" style="margin-top:12px">▶ Watch savings grow</button></div><div class="num"><label>Cookie parcels per year<input id="vc" type="number" value="1800000"></label><label>Merch parcels under 1 lb per year<input id="vm" type="number" value="255500"></label><label>Merch basis<select id="vb"><option value="255500">Every day (365)</option><option value="175000">Shipping days only (about 250)</option></select></label></div></div>
+<input id="sl" type="range" min="0" max="70" value="40"><div style="margin:4px 0 2px"><button class="btn" id="sweep" style="margin-top:12px">▶ Watch savings grow</button></div><div id="tiers" style="margin:6px 0 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div><div class="num"><label>Cookie parcels per year<input id="vc" type="number" value="1800000"></label><label>Merch parcels under 1 lb per year<input id="vm" type="number" value="255500"></label><label>Merch basis<select id="vb"><option value="255500">Every day (365)</option><option value="175000">Shipping days only (about 250)</option></select></label></div></div>
 <div class="g4"><div class="card kpi"><div class="lbl">Estimated yearly savings</div><div class="big" id="tot">$0</div><div class="note">cookie plus merchandise under 1 lb</div></div>
 <div class="card kpi"><div class="lbl">Cookie saving per parcel</div><div class="val" id="cs"></div><div class="note" id="cn"></div></div>
 <div class="card kpi"><div class="lbl">Parcels the new card wins</div><div class="val" id="cw"></div><div class="note">we route a parcel only where it is cheaper</div></div>
@@ -157,6 +157,10 @@ document.querySelectorAll('.sp').forEach(function(b){b.onclick=function(){SIM.sp
 $('#share').onclick=function(){send('share');var p=+$('#sl').value,vc=+$('#vc').value,vm=+$('#vm').value;location.href='mailto:Xander@hassantranspo.com?subject='+encodeURIComponent('Girl Scouts rate simulator: my number')+'&body='+encodeURIComponent('I set my current rate about '+p+'% below the mock, which shows about '+m(tot(D.pts[p],vc,vm))+' a year in estimated savings. I would like to see it with our real PLD.')};
 if('IntersectionObserver' in window){new IntersectionObserver(function(es,o){es.forEach(function(e){if(e.isIntersecting){send('rate_card_view');o.disconnect()}})},{threshold:.4}).observe($('#rcw'))}
 
+
+function tierChips(box,sl,vcI,vmI,go){var vc=+vcI.value||0,vm=+vmI.value||0,cur=+sl.value;
+ box.innerHTML='<span class="sub" style="margin-right:6px">Jump to the deck tiers</span>'+[30,40,50].map(function(p){var t=tot(D.pts[p],vc,vm);return '<button class="btn o tier'+(cur===p?' on':'')+'" data-p="'+p+'">'+p+'% below &middot; '+(t>=1e6?'$'+(t/1e6).toFixed(1)+'M':m(t))+'</button>'}).join(' ');
+ box.querySelectorAll('.tier').forEach(function(b){b.onclick=function(){sl.value=b.dataset.p;go()}})}
 var YR={p:12,raf:null},MON=['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],SHR=[0,0,.25,.45,.30,0,0,0,0,0,0,0];
 function yrDraw(sl,vcI,vmI,svg,totEl){var p=+sl.value,vc=+vcI.value||0,vm=+vmI.value||0,pt=D.pts[p],W=560,H=270,l=50,b=30,t=18,r=14,n=12,gw=(W-l-r)/n;
  var mo=MON.map(function(_,i){return {c:pt.cs*vc*SHR[i],m:pt.ms*vm/12}}),cum=[],c=0;mo.forEach(function(o,i){c+=o.c+o.m;cum.push(c)});var mx=Math.max(cum[11],1);mx=Math.ceil(mx/2e6)*2e6||2e6;
@@ -184,7 +188,7 @@ function yrDraw(sl,vcI,vmI,svg,totEl){var p=+sl.value,vc=+vcI.value||0,vm=+vmI.v
 function yrPlay(btn,redraw){if(YR.raf){cancelAnimationFrame(YR.raf);YR.raf=null;btn.textContent='▶ Play the year';YR.p=12;redraw();return}var t0=null;btn.textContent='■ Stop';
  function st(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/12000);YR.p=12*k;redraw();if(k<1)YR.raf=requestAnimationFrame(st);else{YR.raf=null;btn.textContent='↻ Play again'}}YR.raf=requestAnimationFrame(st)}
 
-var yrRe=function(){yrDraw($('#sl'),$('#vc'),$('#vm'),$('#yrsvg'),$('#yrtot'));$('#tot').textContent=$('#yrtot').textContent};var _u=upd;upd=function(w){_u(w);yrRe()};
+var yrRe=function(){yrDraw($('#sl'),$('#vc'),$('#vm'),$('#yrsvg'),$('#yrtot'));$('#tot').textContent=$('#yrtot').textContent;tierChips($('#tiers'),$('#sl'),$('#vc'),$('#vm'),function(){upd('slider')})};var _u=upd;upd=function(w){_u(w);yrRe()};
 $('#yrplay').onclick=function(){yrPlay(this,yrRe)};yrRe();
 dpr();build();upd();requestAnimationFrame(frame);
 </script></body></html>
